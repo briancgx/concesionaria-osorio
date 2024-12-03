@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Inventario</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/inventarios.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Gestión de Inventario</h1>
+        
+        <!-- Sección de filtros -->
+        <div class="search-bar">
+            <input type="text" placeholder="Buscar artículo..." id="searchInput">
+            <button id="filterButton">Filtrar</button>
+        </div>
+        
+        <!-- Tabla de Inventario -->
+        <table>
+            <thead>
+                <tr>
+                    <th>Nombre del Artículo</th>
+                    <th>Cantidad Disponible</th>
+                    <th>Cantidad Vendida</th>
+                    <th>Precio</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Aquí irían los datos dinámicos -->
+                <tr>
+                    <td>Artículo 1</td>
+                    <td>50</td>
+                    <td>20</td>
+                    <td>$100</td>
+                    <td>
+                        <button class="btn view">Ver</button>
+                        <button class="btn edit">Editar</button>
+                        <button class="btn delete">Eliminar</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Artículo 2</td>
+                    <td>100</td>
+                    <td>40</td>
+                    <td>$150</td>
+                    <td>
+                        <button class="btn view">Ver</button>
+                        <button class="btn edit">Editar</button>
+                        <button class="btn delete">Eliminar</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Botones para agregar -->
+        <div class="action-buttons">
+            <button class="btn add">Agregar Inventario</button>
+        </div>
+    </div>
+</body>
+</html>

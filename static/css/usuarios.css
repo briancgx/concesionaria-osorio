@@ -1,0 +1,96 @@
+/* Estilos generales */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f7fa;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    width: 90%;
+    margin: 40px auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Encabezado */
+h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* Botón Agregar Usuario */
+.actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 20px;
+}
+
+.btn {
+    padding: 10px 20px;
+    font-size: 14px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.agregar-btn {
+    background-color: #007bff;
+    color: white;
+}
+
+.agregar-btn:hover {
+    background-color: #0056b3;
+}
+
+/* Tabla de usuarios */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    font-size: 14px;
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #f1f1f1;
+    color: #333;
+}
+
+tr:hover {
+    background-color: #f9f9f9;
+}
+
+/* Botones de acción */
+.editar-btn {
+    padding: 6px 12px;
+    background-color: #28a745;
+    color: white;
+    border-radius: 5px;
+    margin-right: 5px;
+    border: none;
+}
+
+.editar-btn:hover {
+    background-color: #218838;
+}
+
+.eliminar-btn {
+    padding: 6px 12px;
+    background-color: #dc3545;
+    color: white;
+    border-radius: 5px;
+    border: none;
+}
+
+.eliminar-btn:hover {
+    background-color: #c82333;
+}

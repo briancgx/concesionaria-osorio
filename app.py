@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 
+
 # Crear instancia de Flask
 app = Flask(__name__)
 
@@ -31,6 +32,28 @@ def login():
 @app.route('/')
 def home():
     return render_template('index.html')  # Asegúrate de tener el archivo index.html en la carpeta templates/
+
+@app.route('/panel')
+def panel_control():
+    return render_template('panel_control.html')
+@app.route('/clientes')
+def clientes():
+    # Aquí puedes obtener la lista de clientes desde la base de datos
+    return render_template('clientes.html')
+
+@app.route('/creditos')
+def creditos():
+    # Aquí renderizas la plantilla para gestionar créditos
+    return render_template('creditos.html')
+
+@app.route('/inventario')
+def gestion_inventarios():
+    # Aquí puedes pasar los datos necesarios para la plantilla (si fuera necesario).
+    return render_template('inventarios.html')
+
+@app.route('/usuarios')
+def gestion_usuarios():
+    return render_template('usuarios.html')
 
 if __name__ == '__main__':
     app.run(debug=True)

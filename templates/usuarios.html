@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Usuarios</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/usuarios.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Gestión de Usuarios</h1>
+
+        <!-- Botón para agregar un nuevo usuario -->
+        <div class="actions">
+            <button class="btn agregar-btn">Agregar Usuario</button>
+        </div>
+
+        <!-- Tabla de usuarios -->
+        <table>
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Rol</th>
+                    <th>Fecha de Creación</th>
+                    <th>Último Acceso</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Ejemplo de fila de usuario -->
+                <tr>
+                    <td>Juan Pérez</td>
+                    <td>Administrador</td>
+                    <td>01/01/2022</td>
+                    <td>15/11/2024</td>
+                    <td>
+                        <button class="btn editar-btn">Editar</button>
+                        <button class="btn eliminar-btn">Eliminar</button>
+                    </td>
+                </tr>
+                <!-- Más filas de usuarios -->
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

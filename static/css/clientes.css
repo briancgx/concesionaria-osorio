@@ -6,9 +6,9 @@ body {
     background-color: #f4f4f4;
 }
 
+/* Encabezado */
 header {
-    background-color: #333;
-    color: white;
+    color: black;
     padding: 15px;
     text-align: center;
 }
@@ -16,28 +16,50 @@ header {
 header h1 {
     margin: 0;
 }
+
+/* Barra de navegación */
 nav {
-    margin-top: 20px; /* Ajusta la distancia según sea necesario */
+    
+    margin-top: 20px;
+    text-align: center;
+}
+
+/* Botón Volver al Panel */
+.btn-volver {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
 }
 
 /* Contenedor principal de clientes */
 .clientes-container {
+    width: 80%;
+    margin: 20px auto;
     padding: 20px;
-    margin-top: 20px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+/* Encabezado de la tabla */
 .clientes-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: 20px;
 }
 
 .clientes-header h2 {
     margin: 0;
 }
 
-.btn-nuevo {
-    background-color: #28a745;
+/* Botón Agregar Cliente */
+.btn-agregar {
+    background-color: #008CBA;
     color: white;
     padding: 10px 20px;
     border: none;
@@ -45,53 +67,50 @@ nav {
     cursor: pointer;
 }
 
-.btn-nuevo:hover {
-    background-color: #218838;
-}
-
 /* Estilos de la tabla */
-.clientes-table {
+table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
 }
 
-.clientes-table th, .clientes-table td {
+th, td {
+    border: 1px solid #ddd;
     padding: 12px;
     text-align: left;
-    border: 1px solid #ddd;
 }
 
-.clientes-table th {
-    background-color: #f1f1f1;
+th {
+    background-color: #f4f4f4;
 }
 
-.clientes-table tr:hover {
-    background-color: #f9f9f9;
+td {
+    background-color: #fff;
 }
 
-/* Estilos de los botones en la tabla */
+/* Botones de acción */
 button {
-    padding: 8px 16px;
-    border: none;
+    padding: 8px 12px;
+    margin: 5px;
     cursor: pointer;
+    border: none;
     border-radius: 5px;
+    font-size: 14px;
 }
 
+/* Colores de botones */
 .btn-editar {
-    background-color: #007bff;
+    background-color: #018730;
     color: white;
-}
-
-.btn-editar:hover {
-    background-color: #0056b3;
 }
 
 .btn-eliminar {
-    background-color: #dc3545;
+    background-color: #FF5733;
     color: white;
 }
 
-.btn-eliminar:hover {
-    background-color: #c82333;
+/* Efecto hover en los botones */
+button:hover {
+    opacity: 0.8;
+    
 }

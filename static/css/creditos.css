@@ -1,0 +1,117 @@
+/* Estilo general */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f7fa;
+}
+
+/* Contenedor principal */
+.container {
+    width: 80%;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Encabezado */
+h1 {
+    text-align: center;
+    color: #333;
+}
+
+/* Tabla */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+}
+
+th {
+    background-color: #f4f4f4;
+}
+
+td {
+    background-color: #fff;
+}
+
+/* Botones de acción (ver, aprobar, rechazar, editar, eliminar) */
+button {
+    padding: 8px 12px;
+    margin: 5px;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+/* Colores de botones */
+.btn-ver {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.btn-aprobar {
+    background-color: #2196F3;
+    color: white;
+}
+
+.btn-rechazar {
+    background-color: #f44336;
+    color: white;
+}
+
+.btn-editar {
+    background-color: #ff9800;
+    color: white;
+}
+
+.btn-eliminar {
+    background-color: #e91e63;
+    color: white;
+}
+
+/* Botón Agregar Crédito */
+.button-container {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 20px;
+}
+
+.btn-agregar {
+    padding: 8px 20px;
+    background-color: #4CAF50; /* Verde */
+    color: white;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    border: none;
+}
+
+.btn-agregar:hover {
+    background-color: #45a049;
+}
+
+/* Botón Volver al Panel */
+.btn-volver {
+    padding: 8px 20px;
+    background-color: #9E9E9E;
+    color: white;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    border: none;
+    margin-right: 20px;
+}
+
+.btn-volver:hover {
+    background-color: #757575;
+}
