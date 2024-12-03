@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Proyecto Flask</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Bienvenido a mi aplicación Flask</h1>
+    </header>
+
+    <div>
+        {% block content %}
+        <!-- Aquí irá el contenido específico de cada página -->
+        {% endblock %}
+    </div>
+    
+    <!-- Vincula el archivo JS -->
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+    <footer>
+        <p>&copy; 2024 Mi Proyecto Flask</p>
+    </footer>
+</body>
+</html>

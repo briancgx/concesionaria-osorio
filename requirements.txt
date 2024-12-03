@@ -1,0 +1,5 @@
+Flask==2.3.0            # Flask, la librería principal
+Jinja2==3.1.2           # Motor de plantillas (viene con Flask por defecto)
+Werkzeug==2.3.0         # Dependencia de Flask para el manejo de solicitudes HTTP
+Flask-SQLAlchemy==3.0.0 # Si vas a usar bases de datos (opcional)
+Flask-WTF==1.0.1        # Si vas a usar formularios web (opcional)
