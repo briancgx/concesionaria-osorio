@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template
+from datetime import datetime
 
 main_bp = Blueprint('main', __name__)
 
@@ -12,7 +13,18 @@ def clientes():
 
 @main_bp.route('/panel')
 def panel_control():
-    return render_template('panel_control.html')
+    from app import db, Cliente, Credito, Inventario , Vehiculo, Compra
+    total_clientes = Cliente.query.count()  # Obtener el número total de clientes
+    total_creditos = Credito.query.with_entities(db.func.sum(Credito.Monto_crédito)).scalar() or 0  # Suma el monto de los créditos
+    total_inventario = Inventario.query.count()
+    
+        
+    # Calcular las ventas del mes
+    fecha_actual = datetime.now()
+    primer_dia_mes = fecha_actual.replace(day=1)
+    ventas_del_mes = Compra.query.filter(Compra.Fecha_compra >= primer_dia_mes).with_entities(db.func.sum(Compra.Monto)).scalar() or 0
+
+    return render_template('panel_control.html', total_clientes=total_clientes, total_creditos=total_creditos, total_inventario=total_inventario, ventas_del_mes=ventas_del_mes)
 
 @main_bp.route('/index')
 def index():

@@ -21,6 +21,69 @@ class Usuario(db.Model):
     Contraseña = db.Column(db.String(100), nullable=False)
     Rol = db.Column(db.String(50), nullable=False)
 
+
+
+# Definición del modelo para la tabla Clientes
+class Cliente(db.Model):
+       __tablename__ = 'Clientes'
+       
+       ID_Cliente = db.Column(db.Integer, primary_key=True, autoincrement=True)
+       Nombre = db.Column(db.String(50), nullable=False)
+       Dirección = db.Column(db.String(100), nullable=True)
+       Teléfono = db.Column(db.String(10), nullable=True)
+       Correo_electrónico = db.Column(db.String(50), nullable=True)
+       Estado_cliente = db.Column(db.String(10), nullable=True)
+def __repr__(self):
+        return f'<Cliente {self.Nombre}>'
+class Credito(db.Model):
+    __tablename__ = 'Créditos'
+    
+    ID_Credito = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    ID_Cliente = db.Column(db.Integer, db.ForeignKey('Clientes.ID_Cliente'), nullable=False)
+    Monto_crédito = db.Column(db.Numeric(10, 2), nullable=True)
+    Interés = db.Column(db.Numeric(4, 2), nullable=True)
+    Fecha_otorgamiento = db.Column(db.Date, nullable=True)
+    Estado_Crédito = db.Column(db.String(10), nullable=True)
+
+    # Relación con el modelo Cliente
+    cliente = db.relationship('Cliente', backref='creditos')
+
+class Vehiculo(db.Model):
+    __tablename__ = 'Vehículos'
+    
+    ID_Vehículo = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    ID_Cliente = db.Column(db.Integer, db.ForeignKey('Clientes.ID_Cliente'), nullable=True)  # Clave foránea opcional
+    Marca = db.Column(db.String(50), nullable=True)
+    Modelo = db.Column(db.String(50), nullable=True)
+    Año = db.Column(db.Integer, nullable=True)
+    Tipo = db.Column(db.String(30), nullable=True)
+
+    # Relación con el modelo Cliente (opcional)
+    cliente = db.relationship('Cliente', backref='vehículos')
+
+class Compra(db.Model):
+    __tablename__ = 'Compra'
+    
+    ID_Compra = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    ID_Cliente = db.Column(db.Integer, db.ForeignKey('Clientes.ID_Cliente'), nullable=False)
+    ID_Vehículo = db.Column(db.Integer, db.ForeignKey('Vehículos.ID_Vehículo'), nullable=False)
+    Fecha_compra = db.Column(db.Date, nullable=False)
+    Monto = db.Column(db.Numeric(10, 2), nullable=False)
+
+    # Relaciones
+    cliente = db.relationship('Cliente', backref='compras')
+    vehiculo = db.relationship('Vehiculo', backref='compras')
+       
+class Inventario(db.Model):
+    __tablename__ = 'Inventario'
+    
+    ID_Inventario = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    ID_Vehículo = db.Column(db.Integer, db.ForeignKey('Vehiculos.ID_Vehiculo'), nullable=False)
+    Ubicación = db.Column(db.String(50), nullable=True)
+    Estado = db.Column(db.String(20), nullable=True)
+
+    # Relación con el modelo Vehiculo
+    #vehiculo = db.relationship('Vehiculo', backref='inventarios')  
 @app.route('/', methods=['GET', 'POST'])
 def home():
     return render_template('login.html')  # Mostrar el formulario directamente

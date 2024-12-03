@@ -13,16 +13,16 @@
             <h2>Visión General</h2>
             <div class="kpi-container">
                 <div class="kpi-item">
-                    <p><strong>Clientes Activos:</strong> 1,250</p>
+                    <p><strong>Clientes Activos:</strong>  {{ total_clientes }} </p>
                 </div>
                 <div class="kpi-item">
-                    <p><strong>Créditos Aprobados:</strong> $1,500,000</p>
+                    <p><strong>Créditos Aprobados:</strong>${{ total_creditos }} </p>
                 </div>
                 <div class="kpi-item">
-                    <p><strong>Inventario Disponible:</strong> 400 unidades</p>
+                    <p><strong>Inventario Disponible:</strong> {{ total_inventario }}  unidades</p>
                 </div>
                 <div class="kpi-item">
-                    <p><strong>Ventas del Mes:</strong> $250,000</p>
+                    <p><strong>Ventas del Mes:</strong> ${{ ventas_del_mes }} </p>
                 </div>
             </div>
         </div>
