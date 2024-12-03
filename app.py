@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
+from routes.main import main_bp
 
 # Crear instancia de Flask
 app = Flask(__name__)
@@ -45,6 +46,8 @@ def login():
 @app.route('/dashboard')
 def dashboard():
     return '¡Bienvenido al Dashboard!'
+
+app.register_blueprint(main_bp)
 
 if __name__ == '__main__':
     app.run(debug=True)
