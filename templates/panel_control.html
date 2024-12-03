@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Control</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/panel_control.css') }}">
+</head>
+<body>
+    <div class="panel-container">
+        <!-- Visión General (KPI) -->
+        <div class="kpi-section">
+            <h2>Visión General</h2>
+            <div class="kpi-container">
+                <div class="kpi-item">
+                    <p><strong>Clientes Activos:</strong> 1,250</p>
+                </div>
+                <div class="kpi-item">
+                    <p><strong>Créditos Aprobados:</strong> $1,500,000</p>
+                </div>
+                <div class="kpi-item">
+                    <p><strong>Inventario Disponible:</strong> 400 unidades</p>
+                </div>
+                <div class="kpi-item">
+                    <p><strong>Ventas del Mes:</strong> $250,000</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Alertas/Notificaciones -->
+        <div class="alerts-section">
+            <h2>Alertas y Notificaciones</h2>
+            <ul>
+                <li>Pago vencido de cliente #12345</li>
+                <li>Créditos por aprobar: 3 solicitudes pendientes</li>
+                <li>Inventario bajo: Producto X (Solo 10 unidades)</li>
+                <li>Nueva solicitud de cliente #67890</li>
+            </ul>
+        </div>
+
+        <!-- Botones de Acceso Rápido -->
+        <div class="quick-access">
+            <h2>Accesos Rápidos</h2>
+            <div class="button-container">
+                <button onclick="window.location.href='/clientes'">Clientes</button>
+                <button onclick="window.location.href='/creditos'">Créditos</button>
+                <button onclick="window.location.href='/inventario'">Inventario</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

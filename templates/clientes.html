@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Clientes</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/clientes.css') }}">
+</head>
+<body>
+    <!-- Encabezado -->
+    <header>
+        <h1>Gestión de Clientes</h1>
+        <nav>
+            <button onclick="window.location.href='/panel'">Volver al Panel</button>
+        </nav>
+    </header>
+
+    <!-- Sección de Tabla de Clientes -->
+    <section class="clientes-container">
+        <div class="clientes-header">
+            <h2>Lista de Clientes</h2>
+            <button onclick="window.location.href='/nuevo_cliente'" class="btn-nuevo">Agregar Nuevo Cliente</button>
+        </div>
+
+        <!-- Tabla de Clientes -->
+        <table class="clientes-table">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Email</th>
+                    <th>Teléfono</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Juan Pérez</td>
+                    <td>juan@example.com</td>
+                    <td>123-456-789</td>
+                    <td>
+                        <button class="btn-editar">Editar</button>
+                        <button class="btn-eliminar">Eliminar</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Ana Gómez</td>
+                    <td>ana@example.com</td>
+                    <td>987-654-321</td>
+                    <td>
+                        <button class="btn-editar">Editar</button>
+                        <button class="btn-eliminar">Eliminar</button>
+                    </td>
+                </tr>
+                <!-- Más filas de clientes -->
+            </tbody>
+        </table>
+    </section>
+</body>
+</html>

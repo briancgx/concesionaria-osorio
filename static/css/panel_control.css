@@ -1,0 +1,100 @@
+/* Estructura básica de la página */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+/* Contenedor principal */
+.panel-container {
+    padding: 20px;
+}
+
+/* Estilo de la sección de KPI */
+.kpi-section {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.kpi-section h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.kpi-container {
+    display: flex;
+    justify-content: space-around;
+}
+
+.kpi-item {
+    background-color: #e7f7f2;
+    padding: 15px;
+    border-radius: 5px;
+    width: 200px;
+    text-align: center;
+    font-size: 18px;
+}
+
+/* Estilo de alertas */
+.alerts-section {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.alerts-section h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.alerts-section ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.alerts-section ul li {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 5px;
+}
+
+/* Estilo de botones de acceso rápido */
+.quick-access {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.quick-access h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.button-container {
+    display: flex;
+    justify-content: space-around;
+}
+
+.button-container button {
+    background-color: #007bff;
+    color: white;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+.button-container button:hover {
+    background-color: #0056b3;
+}
