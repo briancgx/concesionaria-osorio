@@ -32,5 +32,15 @@ def login():
 def home():
     return render_template('index.html')  # Asegúrate de tener el archivo index.html en la carpeta templates/
 
+@app.route('/panel')
+def panel_control():
+    return render_template('panel_control.html')
+@app.route('/clientes')
+def clientes():
+    # Aquí puedes obtener la lista de clientes desde la base de datos
+    return render_template('clientes.html')
+
+
+
 if __name__ == '__main__':
     app.run(debug=True)
