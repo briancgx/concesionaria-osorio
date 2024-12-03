@@ -20,6 +20,10 @@ class Usuario(db.Model):
     Contraseña = db.Column(db.String(100), nullable=False)
     Rol = db.Column(db.String(50), nullable=False)
 
+@app.route('/', methods=['GET', 'POST'])
+def home():
+    return render_template('login.html')  # Mostrar el formulario directamente
+
 # Ruta para el login (GET y POST)
 @app.route('/login', methods=['GET', 'POST'])
 def login():
