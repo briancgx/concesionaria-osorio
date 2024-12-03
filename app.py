@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
+from routes.main import main_bp
 
 
 # Crear instancia de Flask
@@ -21,17 +22,37 @@ class Usuario(db.Model):
     Rol = db.Column(db.String(50), nullable=False)
 
 @app.route('/', methods=['GET', 'POST'])
-def login():
-    if request.method == "POST":
-        username = request.form["username"]
-        password = request.form["password"]
-        # Aquí puedes agregar lógica de autenticación
-        return f"Bienvenido {username}!"
-    return render_template("login.html")
-# Ruta principal
-@app.route('/')
 def home():
-    return render_template('index.html')  # Asegúrate de tener el archivo index.html en la carpeta templates/
+    return render_template('login.html')  # Mostrar el formulario directamente
+
+# Ruta para el login (GET y POST)
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        # Obtener los datos del formulario
+        nombre_usuario = request.form['username']
+        contrasena = request.form['password']
+        
+        # Buscar el usuario en la base de datos
+        usuario = Usuario.query.filter_by(Nombre_usuario=nombre_usuario).first()
+        
+        if usuario and usuario.Contraseña == contrasena:
+            # Si las credenciales son correctas
+            flash('¡Inicio de sesión exitoso!', 'success')
+            return redirect(url_for('dashboard'))  # Redirige al dashboard o página de inicio
+        else:
+            # Si las credenciales son incorrectas
+            flash('Credenciales incorrectas. Intenta de nuevo.', 'error')
+            return redirect(url_for('login'))  # Vuelve al formulario de login
+
+    return render_template('login.html')  # Renderiza el formulario de login
+
+# Ruta para el dashboard (puedes personalizarla según tus necesidades)
+@app.route('/dashboard')
+def dashboard():
+    return '¡Bienvenido al Dashboard!'
+
+app.register_blueprint(main_bp)
 
 @app.route('/panel')
 def panel_control():
