@@ -19,28 +19,32 @@ class Usuario(db.Model):
     Contraseña = db.Column(db.String(100), nullable=False)
     Rol = db.Column(db.String(50), nullable=False)
 
-@app.route('/', methods=['GET', 'POST'])
+# Ruta para el login (GET y POST)
+@app.route('/login', methods=['GET', 'POST'])
 def login():
-    if request.method == "POST":
-        username = request.form["username"]
-        password = request.form["password"]
-        # Aquí puedes agregar lógica de autenticación
-        return f"Bienvenido {username}!"
-    return render_template("login.html")
-# Ruta principal
-@app.route('/')
-def home():
-    return render_template('index.html')  # Asegúrate de tener el archivo index.html en la carpeta templates/
+    if request.method == 'POST':
+        # Obtener los datos del formulario
+        nombre_usuario = request.form['username']
+        contrasena = request.form['password']
+        
+        # Buscar el usuario en la base de datos
+        usuario = Usuario.query.filter_by(Nombre_usuario=nombre_usuario).first()
+        
+        if usuario and usuario.Contraseña == contrasena:
+            # Si las credenciales son correctas
+            flash('¡Inicio de sesión exitoso!', 'success')
+            return redirect(url_for('dashboard'))  # Redirige al dashboard o página de inicio
+        else:
+            # Si las credenciales son incorrectas
+            flash('Credenciales incorrectas. Intenta de nuevo.', 'error')
+            return redirect(url_for('login'))  # Vuelve al formulario de login
 
-@app.route('/panel')
-def panel_control():
-    return render_template('panel_control.html')
-@app.route('/clientes')
-def clientes():
-    # Aquí puedes obtener la lista de clientes desde la base de datos
-    return render_template('clientes.html')
+    return render_template('login.html')  # Renderiza el formulario de login
 
-
+# Ruta para el dashboard (puedes personalizarla según tus necesidades)
+@app.route('/dashboard')
+def dashboard():
+    return '¡Bienvenido al Dashboard!'
 
 if __name__ == '__main__':
     app.run(debug=True)
