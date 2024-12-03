@@ -13,9 +13,9 @@ def clientes():
 
 @main_bp.route('/panel')
 def panel_control():
-    from app import db, Cliente, Credito, Inventario , Vehiculo, Compra
+    from app import db, Cliente, Credito, Inventario, Vehiculo, Compra
     total_clientes = Cliente.query.count()  # Obtener el número total de clientes
-    total_creditos = Credito.query.with_entities(db.func.sum(Credito.Monto_crédito)).scalar() or 0  # Suma el monto de los créditos
+    total_creditos = Credito.query.filter(Credito.Estado_Crédito == 'Aprobado').with_entities(db.func.sum(Credito.Monto_crédito)).scalar() or 0  # Suma el monto de los créditos aprobados
     total_inventario = Inventario.query.count()
     
         
