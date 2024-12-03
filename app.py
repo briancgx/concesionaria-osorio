@@ -39,7 +39,7 @@ def login():
         if usuario and usuario.Contraseña == contrasena:
             # Si las credenciales son correctas
             flash('¡Inicio de sesión exitoso!', 'success')
-            return redirect(url_for('dashboard'))  # Redirige al dashboard o página de inicio
+            return redirect(url_for('main.panel_control'))  # Redirige al dashboard o página de inicio
         else:
             # Si las credenciales son incorrectas
             flash('Credenciales incorrectas. Intenta de nuevo.', 'error')
@@ -47,34 +47,8 @@ def login():
 
     return render_template('login.html')  # Renderiza el formulario de login
 
-# Ruta para el dashboard (puedes personalizarla según tus necesidades)
-@app.route('/dashboard')
-def dashboard():
-    return '¡Bienvenido al Dashboard!'
-
-app.register_blueprint(main_bp)
-
-@app.route('/panel')
-def panel_control():
-    return render_template('panel_control.html')
-@app.route('/clientes')
-def clientes():
-    # Aquí puedes obtener la lista de clientes desde la base de datos
-    return render_template('clientes.html')
-
-@app.route('/creditos')
-def creditos():
-    # Aquí renderizas la plantilla para gestionar créditos
-    return render_template('creditos.html')
-
-@app.route('/inventario')
-def gestion_inventarios():
-    # Aquí puedes pasar los datos necesarios para la plantilla (si fuera necesario).
-    return render_template('inventarios.html')
-
-@app.route('/usuarios')
-def gestion_usuarios():
-    return render_template('usuarios.html')
+# Registrar el blueprint en la aplicación
+app.register_blueprint(main_bp) 
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)

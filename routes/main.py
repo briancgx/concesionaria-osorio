@@ -10,7 +10,7 @@ def dashboard():
 def clientes():
     return render_template('clientes.html')
 
-@main_bp.route('/panel-control')
+@main_bp.route('/panel')
 def panel_control():
     return render_template('panel_control.html')
 
@@ -21,3 +21,15 @@ def index():
 @main_bp.route('/base')
 def base():
     return render_template('base.html')
+
+@main_bp.route('/creditos')
+def creditos():
+    return render_template('creditos.html')
+
+@main_bp.route('/inventario')
+def inventario():
+    return render_template('inventarios.html')
+
+@main_bp.route('/usuarios')
+def usuarios():
+    return render_template('usuarios.html')
