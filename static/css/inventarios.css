@@ -127,3 +127,19 @@ tr:hover {
 .add:hover {
     background-color: #0056b3;
 }
+
+/* Estilo del botón Volver al Panel*/
+.btn-volver {
+    padding: 8px 20px;
+    background-color: #9E9E9E;
+    color: white;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    border: none;
+    margin-right: 20px;
+}
+
+.btn-volver:hover {
+    background-color: #757575;
+}

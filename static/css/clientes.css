@@ -114,3 +114,19 @@ button:hover {
     opacity: 0.8;
     
 }
+
+/* Estilo del botón Volver al Panel (Coincidiendo con el estilo de créditos e inventarios) */
+.btn-volver {
+    padding: 8px 20px;
+    background-color: #9E9E9E; /* Color gris */
+    color: white;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    border: none;
+    text-decoration: none;
+}
+
+.btn-volver:hover {
+    background-color: #757575; /* Color gris oscuro al pasar el ratón */
+}
