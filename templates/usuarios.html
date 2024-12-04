@@ -8,7 +8,15 @@
 </head>
 <body>
     <div class="container">
-        <h1>Gestión de Usuarios</h1>
+        <div class="header-bar">
+            <div class="title-container">
+                <h1>Gestión de Usuarios</h1>
+            </div>
+            <!-- Logo debajo del título -->
+        </div>
+        <div class="logo-container">
+            <img src="{{ url_for('static', filename='images/logof.jpeg') }}" alt="Logo" class="logo">
+        </div>
 
         <!-- Botón para agregar un nuevo usuario -->
         <div class="actions">
@@ -34,7 +42,7 @@
                         <td>{{ usuario.Fecha_creacion }}</td>
                         <td>{{ usuario.Ultimo_acceso }}</td>
                         <td>
-                            <a href="{{ url_for('main.ver_usuario', id=usuario.ID_Usuario) }}" class="btn editar-btn">Ver</a>
+                            <a href="{{ url_for('main.ver_usuario', id=usuario.ID_Usuario) }}" class="btn ver-btn">Ver</a>
                             <a href="{{ url_for('main.editar_usuario', id=usuario.ID_Usuario) }}" class="btn editar-btn">Editar</a>
                             <form action="{{ url_for('main.eliminar_usuario', id=usuario.ID_Usuario) }}" method="POST" style="display:inline;">
                                 <button type="submit" class="btn eliminar-btn" onclick="return confirm('¿Estás seguro de que deseas eliminar este usuario?')">Eliminar</button>

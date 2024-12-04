@@ -15,11 +15,46 @@ body {
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-/* Encabezado */
+/* Barra de encabezado */
+.header-bar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #007BFF; /* Azul claro */
+    color: white;
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.title-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
 h1 {
+    margin: 0;
+    font-size: 28px;
     text-align: center;
-    color: #333;
-    margin-bottom: 20px;
+    color: white;
+    width: 100%;
+    word-wrap: break-word;
+}
+
+/* Logo debajo del título */
+.logo-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.logo {
+    width: 150px;
+    height: auto;
 }
 
 /* Botón Agregar Usuario */
@@ -61,7 +96,7 @@ th, td {
 }
 
 th {
-    background-color: #f1f1f1;
+    background-color: #e1f5fe;  /* Azul claro */
     color: #333;
 }
 
@@ -69,44 +104,51 @@ tr:hover {
     background-color: #f9f9f9;
 }
 
-/* Botones de acción */
-.editar-btn {
+/* Botones de acción (Ver, Editar, Eliminar) */
+.ver-btn, .editar-btn, .eliminar-btn {
     padding: 6px 12px;
-    background-color: #28a745;
     color: white;
     border-radius: 5px;
-    margin-right: 5px;
+    text-decoration: none; /* Elimina el subrayado */
     border: none;
 }
 
-.editar-btn:hover {
+.ver-btn {
+    background-color: #28a745; /* Verde */
+}
+
+.ver-btn:hover {
     background-color: #218838;
 }
 
+.editar-btn {
+    background-color: #ffc107; /* Amarillo */
+}
+
+.editar-btn:hover {
+    background-color: #e0a800;
+}
+
 .eliminar-btn {
-    padding: 6px 12px;
-    background-color: #dc3545;
-    color: white;
-    border-radius: 5px;
-    border: none;
+    background-color: #e91e63; /* Rosa */
 }
 
 .eliminar-btn:hover {
-    background-color: #c82333;
+    background-color: #c2185b;
 }
 
 /* Estilo del botón Volver al Panel*/
 .btn-volver {
     padding: 8px 20px;
-    background-color: #9E9E9E;
-    color: white;
+    background-color: #e1f5fe;  /* Azul claro */
+    color: #333;
     border-radius: 5px;
     font-size: 14px;
     cursor: pointer;
     border: none;
-    margin-right: 20px;
+    margin-top: 20px; /* Añadido margen superior */
 }
 
 .btn-volver:hover {
-    background-color: #757575;
+    background-color: #b3e5fc;
 }
