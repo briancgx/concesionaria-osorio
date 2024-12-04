@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Cliente</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/clientes.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Editar Cliente</h1>
+    </header>
+
+    <section class="form-container">
+        <form action="/editar_cliente/{{ cliente.ID_Cliente }}" method="POST">
+            <div class="form-group">
+                <label for="nombre">Nombre</label>
+                <input type="text" id="nombre" name="nombre" value="{{ cliente.Nombre }}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="correo">Correo Electrónico</label>
+                <input type="email" id="correo" name="correo" value="{{ cliente.Correo_electrónico }}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="telefono">Teléfono</label>
+                <input type="text" id="telefono" name="telefono" value="{{ cliente.Teléfono }}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="direccion">Dirección</label>
+                <input type="text" id="direccion" name="direccion" value="{{ cliente.Dirección }}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="estado_cliente">Estado</label>
+                <select name="estado_cliente" id="estado_cliente" required>
+                    <option value="Activo" {% if cliente.Estado_cliente == 'Activo' %}selected{% endif %}>Activo</option>
+                    <option value="Inactivo" {% if cliente.Estado_cliente == 'Inactivo' %}selected{% endif %}>Inactivo</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn-submit">Guardar Cambios</button>
+        </form>
+
+        <div class="back-button-container">
+            <button class="btn-volver" onclick="window.location.href='/clientes'">Volver</button>
+        </div>
+    </section>
+</body>
+</html>
