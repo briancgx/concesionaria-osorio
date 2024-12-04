@@ -9,7 +9,7 @@
 <body>
     <!-- Encabezado -->
     <header>
-        <h1>Gestion de clientes</h1>
+        <h1>Gestión de Clientes</h1>
         <nav>
         </nav>
     </header>
@@ -28,31 +28,28 @@
                     <th>Nombre</th>
                     <th>Email</th>
                     <th>Teléfono</th>
+                    <th>Estado</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
+                {% for cliente in clientes %}
                 <tr>
-                    <td>Juan Pérez</td>
-                    <td>juan@example.com</td>
-                    <td>123-456-789</td>
+                    <td>{{ cliente.Nombre }}</td>
+                    <td>{{ cliente.Correo_electrónico }}</td>
+                    <td>{{ cliente.Teléfono }}</td>
+                    <td>{{ cliente.Estado_cliente }}</td>
                     <td>
-                        <button class="btn-editar">Editar</button>
-                        <button class="btn-eliminar">Eliminar</button>
+                        <button class="btn-editar" onclick="window.location.href='/editar_cliente/{{ cliente.ID_Cliente }}'">Editar</button>
+                        <form action="/eliminar_cliente/{{ cliente.ID_Cliente }}" method="POST" style="display:inline;">
+                            <button class="btn-eliminar" type="submit">Eliminar</button>
+                        </form>
                     </td>
                 </tr>
-                <tr>
-                    <td>Ana Gómez</td>
-                    <td>ana@example.com</td>
-                    <td>987-654-321</td>
-                    <td>
-                        <button class="btn-editar">Editar</button>
-                        <button class="btn-eliminar">Eliminar</button>
-                    </td>
-                </tr>
-                <!-- Más filas de clientes -->
+                {% endfor %}
             </tbody>
         </table>
+
         <div class="back-button-container">
             <button class="btn-volver" onclick="window.location.href='/panel'">Volver al Panel</button>
         </div>

@@ -1,4 +1,4 @@
-from flask import Blueprint, flash, redirect, render_template, request, url_for
+from flask import Blueprint, app, flash, redirect, render_template, request, url_for
 from models import db, Cliente, Credito, Inventario, Vehiculo, Compra, Pago, Usuario
 from datetime import datetime
 
@@ -7,10 +7,6 @@ main_bp = Blueprint('main', __name__)
 @main_bp.route('/dashboard')
 def dashboard():
     return render_template('dashboard.html')
-
-@main_bp.route('/clientes')
-def clientes():
-    return render_template('clientes.html')
 
 @main_bp.route('/panel')
 def panel_control():
@@ -285,3 +281,99 @@ def agregar_usuario():
     
     # Mostrar el formulario para agregar un nuevo usuario
     return render_template('agregar_usuario.html')
+
+# ---------- Clientes ----------
+@main_bp.route('/clientes')
+def clientes():
+    # Obtener todos los clientes desde la base de datos
+    clientes = Cliente.query.all()
+    
+    # Pasar los clientes al template
+    return render_template('clientes.html', clientes=clientes)
+
+@main_bp.route('/nuevo_cliente', methods=['GET', 'POST'])
+def nuevo_cliente():
+    if request.method == 'POST':
+        # Obtener los datos del formulario
+        nombre = request.form['nombre']
+        direccion = request.form['direccion']
+        telefono = request.form['telefono']
+        correo = request.form['correo']
+        estado = request.form['estado']
+        
+        # Crear un nuevo cliente
+        nuevo_cliente = Cliente(
+            Nombre=nombre,
+            Dirección=direccion,
+            Teléfono=telefono,
+            Correo_electrónico=correo,
+            Estado_cliente=estado
+        )
+        
+        # Guardar el cliente en la base de datos
+        db.session.add(nuevo_cliente)
+        db.session.commit()
+        
+        flash('Cliente agregado exitosamente', 'success')
+        return redirect(url_for('main.clientes'))
+    
+    return render_template('nuevo_cliente.html')
+
+@main_bp.route('/editar_cliente/<int:id>', methods=['GET', 'POST'])
+def editar_cliente(id):
+    cliente = Cliente.query.get_or_404(id)
+
+    if request.method == 'POST':
+        # Asegúrate de que el nombre del campo sea correcto
+        cliente.Nombre = request.form['nombre']
+        cliente.Correo_electrónico = request.form['correo']  # Verifica que 'correo' esté bien escrito
+        cliente.Teléfono = request.form['telefono']
+        cliente.Dirección = request.form['direccion']
+        cliente.Estado_cliente = request.form['estado_cliente']
+
+        db.session.commit()
+
+        flash('Cliente actualizado exitosamente', 'success')
+        return redirect(url_for('main.clientes'))
+
+    return render_template('editar_cliente.html', cliente=cliente)
+
+@main_bp.route('/eliminar_cliente/<int:id>', methods=['POST'])
+def eliminar_cliente(id):
+    cliente = Cliente.query.get_or_404(id)
+    
+    # Eliminar el cliente de la base de datos
+    db.session.delete(cliente)
+    db.session.commit()
+    
+    flash('Cliente eliminado', 'danger')
+    return redirect(url_for('main.clientes'))
+
+@main_bp.route('/agregar_cliente', methods=['GET', 'POST'])
+def agregar_cliente():
+    if request.method == 'POST':
+        # Obtener los datos del formulario
+        nombre = request.form['nombre']
+        email = request.form['email']
+        telefono = request.form['telefono']
+        direccion = request.form['direccion']
+        estado_cliente = request.form['estado_cliente']
+        
+        # Crear un nuevo cliente
+        nuevo_cliente = Cliente(
+            Nombre=nombre,
+            Correo_electrónico=email,
+            Teléfono=telefono,
+            Dirección=direccion,
+            Estado_cliente=estado_cliente
+        )
+        
+        # Guardar el cliente en la base de datos
+        db.session.add(nuevo_cliente)
+        db.session.commit()
+        
+        flash('Cliente agregado exitosamente', 'success')
+        return redirect(url_for('main.clientes'))
+    
+    # Si el método es GET, simplemente muestra el formulario
+    return render_template('agregar_cliente.html')
