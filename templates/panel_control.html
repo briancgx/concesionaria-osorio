@@ -35,8 +35,22 @@
                     <li class="alert alert-danger">Pago vencido de cliente #{{ pago.credito.ID_Cliente }}</li>
                 {% endfor %}
                 <li>Créditos por aprobar: {{ total_solicitudes_pendientes }} solicitudes pendientes</li>
-                <li>Inventario bajo: Producto X (Solo 10 unidades)</li>
-                <li>Nueva solicitud de cliente #67890</li>
+                
+                {% for inventario in inventarios %}
+                {% if inventario.Estado == 'No Disponible' %}
+                    <li class="alert alert-danger">
+                        Inventario: El auto {{ inventario.ID_Vehículo }} no está disponible.
+                    </li>
+                {% endif %}
+            {% endfor %}
+            {% for cliente in clientes_pendientes %}
+                <li class="alert alert-warning">{{ cliente.Nombre }} tiene una solicitud pendiente.</li>
+            {% else %}
+                <li>No hay clientes con solicitudes pendientes.</li>
+            {% endfor %}
+            
+
+         
             </ul>
         </div>
 

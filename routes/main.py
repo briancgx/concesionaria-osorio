@@ -21,10 +21,15 @@ def panel_control():
     # Calcular las ventas del mes
     # Calcular las ventas del mes
     fecha_actual = datetime.now()
-    primer_dia_mes = fecha_actual.replace(day=1)
-    ventas_del_mes = Compra.query.filter(Compra.Fecha_compra >= primer_dia_mes).with_entities(db.func.sum(Compra.Monto)).scalar() or 0
-    pagos_vencidos = Pago.query.filter(Pago.Fecha_pago < fecha_actual).all()
-    return render_template('panel_control.html', total_clientes=total_clientes, total_creditos=total_creditos, total_inventario=total_inventario, ventas_del_mes=ventas_del_mes, total_solicitudes_pendientes=total_solicitudes_pendientes,pagos_vencidos=pagos_vencidos)
+    primer_dia_mes = datetime(fecha_actual.year, fecha_actual.month, 1)
+    ventas_del_mes = Compra.query.with_entities(db.func.sum(db.func.coalesce(Compra.Monto, 0)))\
+                             .filter(Compra.Fecha_compra >= primer_dia_mes, Compra.Fecha_compra < fecha_actual)\
+                             .scalar() or 0
+
+    pagos_vencidos = Pago.query.filter(Pago.Fecha_pago < fecha_actual, Pago.Estado == 'debe').all()
+    inventarios = Inventario.query.all()
+    clientes_pendientes = Cliente.query.join(Credito).filter(Credito.Estado_Crédito == 'Pendiente').all()
+    return render_template('panel_control.html', total_clientes=total_clientes, total_creditos=total_creditos, total_inventario=total_inventario, ventas_del_mes=ventas_del_mes, total_solicitudes_pendientes=total_solicitudes_pendientes,pagos_vencidos=pagos_vencidos, inventarios=inventarios,clientes_pendientes=clientes_pendientes)
 
 @main_bp.route('/index')
 def index():
