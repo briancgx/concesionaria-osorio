@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Crédito</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/creditos.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Editar Crédito</h1>
+
+        <!-- Formulario de edición de crédito -->
+        <form method="POST">
+            <div class="form-group">
+                <label for="id_cliente">Cliente</label>
+                <select name="id_cliente" id="id_cliente" required>
+                    {% for cliente in clientes %}
+                        <option value="{{ cliente.ID_Cliente }}" {% if cliente.ID_Cliente == credito.ID_Cliente %} selected {% endif %}>
+                            {{ cliente.Nombre }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="monto_credito">Monto Crédito</label>
+                <input type="number" step="0.01" name="monto_credito" id="monto_credito" value="{{ credito.Monto_crédito }}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="interes">Interés (%)</label>
+                <input type="number" step="0.01" name="interes" id="interes" value="{{ credito.Interés }}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="fecha_otorgamiento">Fecha de Otorgamiento</label>
+                <input type="date" name="fecha_otorgamiento" id="fecha_otorgamiento" value="{{ credito.Fecha_otorgamiento.strftime('%Y-%m-%d') }}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="estado_credito">Estado del Crédito</label>
+                <select name="estado_credito" id="estado_credito" required>
+                    <option value="Aprobado" {% if credito.Estado_Crédito == 'Aprobado' %} selected {% endif %}>Aprobado</option>
+                    <option value="Pendiente" {% if credito.Estado_Crédito == 'Pendiente' %} selected {% endif %}>Pendiente</option>
+                    <option value="Rechazado" {% if credito.Estado_Crédito == 'Rechazado' %} selected {% endif %}>Rechazado</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <button type="submit" class="btn-editar">Guardar Cambios</button>
+            </div>
+        </form>
+
+        <!-- Botón para volver -->
+        <div class="back-button-container">
+            <a href="{{ url_for('main.creditos') }}" class="btn-volver">Volver a la lista de Créditos</a>
+        </div>
+    </div>
+</body>
+</html>
