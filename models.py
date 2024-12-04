@@ -111,7 +111,7 @@ class Pago(db.Model):
     ID_Crédito = db.Column(db.Integer, db.ForeignKey('Créditos.ID_Crédito'), nullable=True)
     Monto_pago = db.Column(db.Numeric(10, 2), nullable=True)
     Fecha_pago = db.Column(db.Date, nullable=True)
-
+    Estado = db.Column(db.String(4), nullable=True) 
     # Relación con el modelo Crédito
     credito = db.relationship('Credito', backref='pagos')
 

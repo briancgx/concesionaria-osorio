@@ -31,8 +31,10 @@
         <div class="alerts-section">
             <h2>Alertas y Notificaciones</h2>
             <ul>
-                <li>Pago vencido de cliente #12345</li>
-                <li>Créditos por aprobar: 3 solicitudes pendientes</li>
+                {% for pago in pagos_vencidos %}
+                    <li class="alert alert-danger">Pago vencido de cliente #{{ pago.credito.ID_Cliente }}</li>
+                {% endfor %}
+                <li>Créditos por aprobar: {{ total_solicitudes_pendientes }} solicitudes pendientes</li>
                 <li>Inventario bajo: Producto X (Solo 10 unidades)</li>
                 <li>Nueva solicitud de cliente #67890</li>
             </ul>
