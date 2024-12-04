@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Inventario</title>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header-bar">
+            <div class="title-container">
+                <h1>Editar Inventario</h1>
+            </div>
+        </div>
+
+        <form action="{{ url_for('main.editar_inventario', id=inventario.ID_Inventario) }}" method="POST">
+            <div class="form-group">
+                <label for="id_vehiculo">Vehículo</label>
+                <input type="text" id="id_vehiculo" name="id_vehiculo" value="{{ inventario.vehiculo.Marca }} {{ inventario.vehiculo.Modelo }}" readonly>
+            </div>
+
+            <div class="form-group">
+                <label for="ubicacion">Ubicación</label>
+                <input type="text" id="ubicacion" name="ubicacion" value="{{ inventario.Ubicación }}">
+            </div>
+
+            <div class="form-group">
+                <label for="estado">Estado</label>
+                <select id="estado" name="estado">
+                    <option value="Disponible" {% if inventario.Estado == 'Disponible' %}selected{% endif %}>Disponible</option>
+                    <option value="No Disponible" {% if inventario.Estado == 'No Disponible' %}selected{% endif %}>No Disponible</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <button type="submit" class="btn save">Guardar Cambios</button>
+            </div>
+        </form>
+
+        <div class="action-buttons-container">
+            <button class="btn-volver" onclick="window.location.href='/inventario'">Volver a Inventario</button>
+        </div>
+    </div>
+
+</body>
+</html>

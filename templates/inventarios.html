@@ -7,8 +7,16 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/inventarios.css') }}">
 </head>
 <body>
+
     <div class="container">
-        <h1>Gestión de Inventario</h1>
+        <div class="header-bar">
+            <div class="title-container">
+                <h1>Gestión de Inventario</h1>
+            </div>
+        </div>
+        <div class="logo-container">
+            <img src="{{ url_for('static', filename='images/logof.jpeg') }}" alt="Logo" class="logo">
+        </div>
         
         <!-- Sección de filtros -->
         <div class="search-bar">
@@ -20,50 +28,41 @@
         <table>
             <thead>
                 <tr>
-                    <th>Nombre del Artículo</th>
-                    <th>Cantidad Disponible</th>
-                    <th>Cantidad Vendida</th>
-                    <th>Precio</th>
+                    <th>Nombre del Vehículo</th>
+                    <th>Ubicación</th>
+                    <th>Estado</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
-                <!-- Aquí irían los datos dinámicos -->
-                <tr>
-                    <td>Artículo 1</td>
-                    <td>50</td>
-                    <td>20</td>
-                    <td>$100</td>
-                    <td>
-                        <button class="btn view">Ver</button>
-                        <button class="btn edit">Editar</button>
-                        <button class="btn delete">Eliminar</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Artículo 2</td>
-                    <td>100</td>
-                    <td>40</td>
-                    <td>$150</td>
-                    <td>
-                        <button class="btn view">Ver</button>
-                        <button class="btn edit">Editar</button>
-                        <button class="btn delete">Eliminar</button>
-                    </td>
-                </tr>
+                {% for inventario in inventarios %}
+                    <tr>
+                        <td>{{ inventario.vehiculo.Marca }} {{ inventario.vehiculo.Modelo }} ({{ inventario.vehiculo.Año }})</td>
+                        <td>{{ inventario.Ubicación }}</td>
+                        <td>{{ inventario.Estado }}</td>
+                        <td>
+                            <!-- Redirige al detalle del inventario -->
+                            <a href="{{ url_for('main.ver_inventario', id=inventario.ID_Inventario) }}" class="btn view">Ver</a>
+
+                            <!-- Redirige al formulario de edición del inventario -->
+                            <a href="{{ url_for('main.editar_inventario', id=inventario.ID_Inventario) }}" class="btn edit">Editar</a>
+
+                            <!-- Formulario para eliminar el inventario -->
+                            <form action="{{ url_for('main.eliminar_inventario', id=inventario.ID_Inventario) }}" method="POST" style="display:inline;">
+                                <button type="submit" class="btn delete" onclick="return confirm('¿Estás seguro de que deseas eliminar este inventario?')">Eliminar</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
             </tbody>
         </table>
 
-        <!-- Botones para agregar -->
-        <div class="action-buttons">
-            <button class="btn add">Agregar Inventario</button>
-        </div>
-
-        <!-- Botón para volver al panel -->
-        <div class="back-button-container">
+        <!-- Botones para agregar y volver al panel -->
+        <div class="action-buttons-container">
             <button class="btn-volver" onclick="window.location.href='/panel'">Volver al Panel</button>
+            <button class="btn add" onclick="window.location.href='{{ url_for('main.agregar_inventario') }}'">Agregar Inventario</button>
         </div>
-
     </div>
+
 </body>
 </html>

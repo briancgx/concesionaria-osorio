@@ -6,6 +6,37 @@ body {
     padding: 0;
 }
 
+.header-bar {
+    display: flex;
+    flex-direction: column;         /* Coloca los elementos en columna (título arriba, logo abajo) */
+    align-items: center;            /* Centra los elementos horizontalmente */
+    justify-content: center;        /* Centra los elementos verticalmente */
+    background-color: #007BFF;      /* Azul claro */
+    color: white;
+    
+    font-size: 20px;
+    font-weight: bold;
+    width: 100%;                    /* Hace que el contenedor ocupe todo el ancho */
+}
+
+.title-container, .logo-container {
+    display: flex;
+    justify-content: center;        /* Centra los elementos horizontalmente */
+    width: 100%;                    /* Asegura que ambos contenedores ocupen todo el ancho */
+}
+
+h1 {
+    margin: 0;                      /* Elimina el margen por defecto para mantener la alineación */
+    font-size: 28px;                 /* Ajusta el tamaño del título */
+}
+
+.logo {
+    width: 150px;                   /* Tamaño del logo, aproximadamente tres veces más grande */
+    height: auto;                   /* Mantiene la proporción del logo */
+    margin-top: 10px;                /* Espacio entre el título y el logo */
+}
+
+
 .container {
     width: 80%;
     margin: 20px auto;
@@ -16,10 +47,13 @@ body {
 }
 
 h1 {
+    background-color: #007BFF;  /* Azul claro */
+    color: white;  /* Texto blanco */
     text-align: center;
-    color: #333;
+    padding: 10px;
     margin-bottom: 20px;
 }
+
 
 /* Estilos para la barra de búsqueda */
 .search-bar {
@@ -63,9 +97,15 @@ th, td {
 }
 
 th {
-    background-color: #ddd;
-    color: rgb(7, 7, 7);
+    background-color: #e1f5fe;  /* Azul claro */
+    color: #333;  /* Color de texto oscuro para contraste */
+    border-bottom: 2px solid #007BFF; /* Borde más fuerte en los encabezados */
 }
+
+td {
+    border-bottom: 1px solid #ddd; /* Borde más suave para las celdas */
+}
+
 
 tr:hover {
     background-color: #f1f1f1;
@@ -131,15 +171,29 @@ tr:hover {
 /* Estilo del botón Volver al Panel*/
 .btn-volver {
     padding: 8px 20px;
-    background-color: #9E9E9E;
-    color: white;
+    background-color: #e1f5fe;  /* Azul claro */
+    color: #333;  /* Texto oscuro */
     border-radius: 5px;
     font-size: 14px;
     cursor: pointer;
     border: none;
-    margin-right: 20px;
 }
 
 .btn-volver:hover {
-    background-color: #757575;
+    background-color: #b3e5fc;  /* Un azul un poco más oscuro al pasar el mouse */
 }
+
+.action-buttons-container {
+    display: flex;
+    justify-content: space-between;  /* Espacio entre los botones */
+    margin-top: 20px;
+}
+
+.btn-volver, .add {
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    border: none;
+}
+

@@ -8,7 +8,17 @@
 </head>
 <body>
     <div class="container">
-        <h1>Gestión de Créditos</h1>
+        <!-- Barra de encabezado -->
+        <div class="header-bar">
+            <div class="title-container">
+                <h1>Gestión de Créditos</h1>
+            </div>
+            <!-- Logo debajo del título -->
+            
+        </div>
+        <div class="logo-container">
+            <img src="{{ url_for('static', filename='images/logof.jpeg') }}" alt="Logo" class="logo">
+        </div>
 
         <!-- Botón para agregar crédito -->
         <div class="button-container">
@@ -31,28 +41,20 @@
                     <!-- Iterar sobre los créditos -->
                     {% for credito in creditos %}
                     <tr>
-                        <td>{{ credito.cliente.Nombre }}</td>  <!-- Nombre del cliente asociado al crédito -->
-                        <td>${{ credito.Monto_crédito }}</td>  <!-- Monto del crédito -->
-                        <td>{{ credito.Fecha_otorgamiento.strftime('%d/%m/%Y') }}</td>  <!-- Fecha de otorgamiento -->
-                        <td>{{ credito.Estado_Crédito }}</td>  <!-- Estado del crédito -->
+                        <td>{{ credito.cliente.Nombre }}</td>
+                        <td>${{ credito.Monto_crédito }}</td>
+                        <td>{{ credito.Fecha_otorgamiento.strftime('%d/%m/%Y') }}</td>
+                        <td>{{ credito.Estado_Crédito }}</td>
                         <td>
-                            <!-- Ver -->
-                            <a href="{{ url_for('main.ver_credito', id=credito.ID_Crédito) }}" class="btn-ver" style="background-color: #4CAF50; color: white; padding: 10px 20px; border: none; border-radius: 5px; text-decoration: none;">Ver</a>
-
-                            <!-- Editar -->
-                            <a href="{{ url_for('main.editar_credito', id=credito.ID_Crédito) }}" class="btn-editar" style="background-color: #FF9800; color: white; padding: 10px 20px; border: none; border-radius: 5px; text-decoration: none;">Editar</a>
-
-                            <!-- Aprobar -->
+                            <!-- Botones de acción como botones (no solo texto) -->
+                            <a href="{{ url_for('main.ver_credito', id=credito.ID_Crédito) }}" class="btn-ver">Ver</a>
+                            <a href="{{ url_for('main.editar_credito', id=credito.ID_Crédito) }}" class="btn-editar">Editar</a>
                             <form action="{{ url_for('main.aprobar_credito', id=credito.ID_Crédito) }}" method="POST" style="display:inline;">
                                 <button type="submit" class="btn-aprobar">Aprobar</button>
                             </form>
-
-                            <!-- Rechazar -->
                             <form action="{{ url_for('main.rechazar_credito', id=credito.ID_Crédito) }}" method="POST" style="display:inline;">
                                 <button type="submit" class="btn-rechazar">Rechazar</button>
                             </form>
-
-                            <!-- Eliminar -->
                             <form action="{{ url_for('main.eliminar_credito', id=credito.ID_Crédito) }}" method="POST" style="display:inline;">
                                 <button type="submit" class="btn-eliminar">Eliminar</button>
                             </form>
