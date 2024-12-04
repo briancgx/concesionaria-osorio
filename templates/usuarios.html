@@ -12,8 +12,8 @@
             <div class="title-container">
                 <h1>Gestión de Usuarios</h1>
             </div>
-            <!-- Logo debajo del título -->
         </div>
+
         <div class="logo-container">
             <img src="{{ url_for('static', filename='images/logof.jpeg') }}" alt="Logo" class="logo">
         </div>
@@ -39,8 +39,8 @@
                     <tr>
                         <td>{{ usuario.Nombre_usuario }}</td>
                         <td>{{ usuario.Rol }}</td>
-                        <td>{{ usuario.Fecha_creacion }}</td>
-                        <td>{{ usuario.Ultimo_acceso }}</td>
+                        <td>{{ usuario.Fecha_creacion.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                        <td>{{ usuario.Ultimo_acceso.strftime('%Y-%m-%d %H:%M:%S') }}</td>
                         <td>
                             <a href="{{ url_for('main.ver_usuario', id=usuario.ID_Usuario) }}" class="btn ver-btn">Ver</a>
                             <a href="{{ url_for('main.editar_usuario', id=usuario.ID_Usuario) }}" class="btn editar-btn">Editar</a>

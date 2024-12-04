@@ -279,30 +279,32 @@ def eliminar_usuario(id):
     flash('Usuario eliminado', 'danger')
     return redirect(url_for('main.usuarios'))
 
+from datetime import datetime
+from flask import render_template
+
 @main_bp.route('/agregar_usuario', methods=['GET', 'POST'])
 def agregar_usuario():
     if request.method == 'POST':
-        # Obtener los datos del formulario
         nombre_usuario = request.form['nombre_usuario']
         contraseña = request.form['contraseña']
         rol = request.form['rol']
-        
-        # Crear un nuevo usuario
+        fecha_creacion = request.form.get('fecha_creacion', datetime.utcnow())
+        ultimo_acceso = request.form.get('ultimo_acceso', datetime.utcnow())
+
         nuevo_usuario = Usuario(
             Nombre_usuario=nombre_usuario,
             Contraseña=contraseña,
-            Rol=rol
+            Rol=rol,
+            Fecha_creacion=fecha_creacion,
+            Ultimo_acceso=ultimo_acceso
         )
         
-        # Guardar el usuario en la base de datos
         db.session.add(nuevo_usuario)
         db.session.commit()
-        
-        flash('Usuario agregado exitosamente', 'success')
         return redirect(url_for('main.usuarios'))
     
-    # Mostrar el formulario para agregar un nuevo usuario
-    return render_template('agregar_usuario.html')
+    current_time = datetime.utcnow().strftime('%Y-%m-%dT%H:%M')
+    return render_template('agregar_usuario.html', current_time=current_time)
 
 # ---------- Clientes ----------
 @main_bp.route('/clientes')
