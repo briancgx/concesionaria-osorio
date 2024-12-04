@@ -12,7 +12,7 @@
 
         <!-- Botón para agregar crédito -->
         <div class="button-container">
-            <button class="btn-agregar">Agregar Crédito</button>
+            <a href="{{ url_for('main.agregar_credito') }}" class="btn-agregar">Agregar Crédito</a>
         </div>
 
         <!-- Tabla de créditos -->
@@ -36,11 +36,26 @@
                         <td>{{ credito.Fecha_otorgamiento.strftime('%d/%m/%Y') }}</td>  <!-- Fecha de otorgamiento -->
                         <td>{{ credito.Estado_Crédito }}</td>  <!-- Estado del crédito -->
                         <td>
-                            <button class="btn-ver">Ver</button>
-                            <button class="btn-editar">Editar</button>
-                            <button class="btn-aprobar">Aprobar</button>
-                            <button class="btn-rechazar">Rechazar</button>
-                            <button class="btn-eliminar">Eliminar</button>
+                            <!-- Ver -->
+                            <a href="{{ url_for('main.ver_credito', id=credito.ID_Crédito) }}" class="btn-ver" style="background-color: #4CAF50; color: white; padding: 10px 20px; border: none; border-radius: 5px; text-decoration: none;">Ver</a>
+
+                            <!-- Editar -->
+                            <a href="{{ url_for('main.editar_credito', id=credito.ID_Crédito) }}" class="btn-editar" style="background-color: #FF9800; color: white; padding: 10px 20px; border: none; border-radius: 5px; text-decoration: none;">Editar</a>
+
+                            <!-- Aprobar -->
+                            <form action="{{ url_for('main.aprobar_credito', id=credito.ID_Crédito) }}" method="POST" style="display:inline;">
+                                <button type="submit" class="btn-aprobar">Aprobar</button>
+                            </form>
+
+                            <!-- Rechazar -->
+                            <form action="{{ url_for('main.rechazar_credito', id=credito.ID_Crédito) }}" method="POST" style="display:inline;">
+                                <button type="submit" class="btn-rechazar">Rechazar</button>
+                            </form>
+
+                            <!-- Eliminar -->
+                            <form action="{{ url_for('main.eliminar_credito', id=credito.ID_Crédito) }}" method="POST" style="display:inline;">
+                                <button type="submit" class="btn-eliminar">Eliminar</button>
+                            </form>
                         </td>
                     </tr>
                     {% endfor %}

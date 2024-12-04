@@ -51,6 +51,68 @@ def inventario():
 def usuarios():
     return render_template('usuarios.html')
 
+@main_bp.route('/ver_credito/<int:id>', methods=['GET'])
+def ver_credito(id):
+    credito = Credito.query.get_or_404(id)
+    return render_template('ver_credito.html', credito=credito)
+
+@main_bp.route('/editar_credito/<int:id>', methods=['GET', 'POST'])
+def editar_credito(id):
+    credito = Credito.query.get_or_404(id)
+    if request.method == 'POST':
+        # Obtener los datos del formulario
+        credito.Monto_crédito = request.form['monto_credito']
+        credito.Interés = request.form['interes']
+        credito.Fecha_otorgamiento = request.form['fecha_otorgamiento']
+        credito.Estado_Crédito = request.form['estado_credito']
+        credito.ID_Cliente = request.form['id_cliente']
+        
+        # Guardar los cambios en la base de datos
+        db.session.commit()
+        
+        flash('Crédito actualizado exitosamente', 'success')
+        return redirect(url_for('main.creditos'))
+    
+    # Obtener la lista de clientes para mostrar en el formulario
+    clientes = Cliente.query.all()
+
+    # Pasar el crédito actual y la lista de clientes al template para editarlo
+    return render_template('editar_credito.html', credito=credito, clientes=clientes)
+
+@main_bp.route('/aprobar_credito/<int:id>', methods=['POST'])
+def aprobar_credito(id):
+    credito = Credito.query.get_or_404(id)
+    credito.Estado_Crédito = 'Aprobado'
+    
+    # Guardar los cambios en la base de datos
+    db.session.commit()
+    
+    flash('Crédito aprobado exitosamente', 'success')
+    return redirect(url_for('main.creditos'))
+
+@main_bp.route('/rechazar_credito/<int:id>', methods=['POST'])
+def rechazar_credito(id):
+    credito = Credito.query.get_or_404(id)
+    credito.Estado_Crédito = 'Rechazado'
+    
+    # Guardar los cambios en la base de datos
+    db.session.commit()
+    
+    flash('Crédito rechazado', 'danger')
+    return redirect(url_for('main.creditos'))
+
+@main_bp.route('/eliminar_credito/<int:id>', methods=['POST'])
+def eliminar_credito(id):
+    credito = Credito.query.get_or_404(id)
+    
+    # Eliminar el crédito de la base de datos
+    db.session.delete(credito)
+    db.session.commit()
+    
+    flash('Crédito eliminado', 'danger')
+    return redirect(url_for('main.creditos'))
+
+
 @main_bp.route('/agregar_credito', methods=['GET', 'POST'])
 def agregar_credito():
     if request.method == 'POST':
