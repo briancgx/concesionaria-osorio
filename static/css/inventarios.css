@@ -124,6 +124,7 @@ tr:hover {
 .view {
     background-color: #28a745;
     color: white;
+    text-decoration: none;
 }
 
 .view:hover {
@@ -133,6 +134,7 @@ tr:hover {
 .edit {
     background-color: #ffc107;
     color: white;
+    text-decoration: none;
 }
 
 .edit:hover {
