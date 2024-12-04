@@ -78,4 +78,50 @@ class Inventario(db.Model):
     Estado = db.Column(db.String(20), nullable=True)
 
     # Relación con el modelo Vehiculo
-    # vehiculo = db.relationship('Vehiculo', backref='inventarios')  
+    # vehiculo = db.relationship('Vehiculo', backref='inventarios')
+
+class AtencionAlCliente(db.Model):
+    __tablename__ = 'Atención_al_Cliente'
+
+    ID_Atención = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    ID_Cliente = db.Column(db.Integer, db.ForeignKey('Clientes.ID_Cliente'), nullable=True)
+    Fecha_atención = db.Column(db.Date, nullable=True)
+    Descripción = db.Column(db.Text, nullable=True)
+    Resolución = db.Column(db.Text, nullable=True)
+
+    # Relación con el modelo Cliente
+    cliente = db.relationship('Cliente', backref='atenciones')
+
+class HistorialCredito(db.Model):
+    __tablename__ = 'Historial_Crédito'
+
+    ID_Historial = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    ID_Crédito = db.Column(db.Integer, db.ForeignKey('Créditos.ID_Credito'), nullable=True)
+    Fecha_actualización = db.Column(db.Date, nullable=True)
+    Estado = db.Column(db.String(20), nullable=True)
+
+    # Relación con el modelo Crédito
+    credito = db.relationship('Credito', backref='historiales')
+
+class Pago(db.Model):
+    __tablename__ = 'Pagos'
+
+    ID_Pago = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    ID_Crédito = db.Column(db.Integer, db.ForeignKey('Créditos.ID_Credito'), nullable=True)
+    Monto_pago = db.Column(db.Numeric(10, 2), nullable=True)
+    Fecha_pago = db.Column(db.Date, nullable=True)
+
+    # Relación con el modelo Crédito
+    credito = db.relationship('Credito', backref='pagos')
+
+class Reporte(db.Model):
+    __tablename__ = 'Reportes'
+
+    ID_Reporte = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    ID_Usuario = db.Column(db.Integer, db.ForeignKey('Usuarios.ID_Usuario'), nullable=True)
+    Fecha = db.Column(db.Date, nullable=True)
+    Tipo = db.Column(db.String(50), nullable=True)
+    Descripción = db.Column(db.Text, nullable=True)
+
+    # Relación con el modelo Usuario
+    usuario = db.relationship('Usuario', backref='reportes')

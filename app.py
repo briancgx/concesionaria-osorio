@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 from routes.main import main_bp
-from models import db, Usuario, Cliente, Credito, Vehiculo, Compra, Inventario
+from models import db, Usuario, Cliente, Credito, Vehiculo, Compra, Inventario, AtencionAlCliente, HistorialCredito, Pago, Reporte
 
 # Crear instancia de Flask
 app = Flask(__name__)
