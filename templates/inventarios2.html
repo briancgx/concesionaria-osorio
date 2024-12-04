@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Inventario</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/inventarios.css') }}">
+</head>
+<body>
+
+    <div class="container">
+        <div class="header-bar">
+            <div class="title-container">
+                <h1>Gestión de Inventario</h1>
+            </div>
+        </div>
+        <div class="logo-container">
+            <img src="{{ url_for('static', filename='images/logof.jpeg') }}" alt="Logo" class="logo">
+        </div>
+        
+        <!-- Sección de filtros -->
+        <div class="search-bar">
+            <input type="text" placeholder="Buscar artículo..." id="searchInput">
+            <button id="filterButton">Filtrar</button>
+        </div>
+        
+        <!-- Tabla de Inventario -->
+        <table>
+            <thead>
+                <tr>
+                    <th>Nombre del Vehículo</th>
+                    <th>Ubicación</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for inventario in inventarios %}
+                    <tr>
+                        <td>{{ inventario.vehiculo.Marca }} {{ inventario.vehiculo.Modelo }} ({{ inventario.vehiculo.Año }})</td>
+                        <td>{{ inventario.Ubicación }}</td>
+                        <td>{{ inventario.Estado }}</td>
+                        <td>
+                            <!-- Redirige al detalle del inventario -->
+                            <a href="{{ url_for('main.ver_inventario', id=inventario.ID_Inventario) }}" class="btn view">Ver</a>
+
+                            <!-- Redirige al formulario de edición del inventario -->
+                            <a href="{{ url_for('main.editar_inventario', id=inventario.ID_Inventario) }}" class="btn edit">Editar</a>
+
+                            <!-- Formulario para eliminar el inventario -->
+                            <form action="{{ url_for('main.eliminar_inventario', id=inventario.ID_Inventario) }}" method="POST" style="display:inline;">
+                                <button type="submit" class="btn delete" onclick="return confirm('¿Estás seguro de que deseas eliminar este inventario?')">Eliminar</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Botones para agregar y volver al panel -->
+        <div class="action-buttons-container">
+            <button class="btn-volver" onclick="window.location.href='/panel_gerente'">Volver al Panel</button>
+            <button class="btn add" onclick="window.location.href='{{ url_for('main.agregar_inventario') }}'">Agregar Inventario</button>
+        </div>
+    </div>
+
+</body>
+</html>
