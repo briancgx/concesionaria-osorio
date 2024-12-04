@@ -12,7 +12,7 @@ def dashboard():
 def panel_control():
     total_clientes = Cliente.query.count()
     total_creditos = Credito.query.filter(Credito.Estado_Crédito == 'Aprobado').with_entities(db.func.sum(Credito.Monto_crédito)).scalar() or 0
-    total_inventario = Inventario.query.count()
+    total_inventario = Inventario.query.filter(Inventario.Estado == 'Disponible').count()
     total_solicitudes_pendientes = Credito.query.filter(Credito.Estado_Crédito == 'Pendiente').count()  # Contar créditos pendientes
     # Calcular las ventas del mes
     # Calcular las ventas del mes
@@ -377,3 +377,35 @@ def agregar_cliente():
     
     # Si el método es GET, simplemente muestra el formulario
     return render_template('agregar_cliente.html')
+
+
+
+@main_bp.route('/panel_gerente')
+def panel_gerente():
+    total_clientes = Cliente.query.count()
+    total_creditos = Credito.query.filter(Credito.Estado_Crédito == 'Aprobado').with_entities(db.func.sum(Credito.Monto_crédito)).scalar() or 0
+    total_inventario = Inventario.query.filter(Inventario.Estado == 'Disponible').count()
+    total_solicitudes_pendientes = Credito.query.filter(Credito.Estado_Crédito == 'Pendiente').count()  # Contar créditos pendientes
+    # Calcular las ventas del mes
+    # Calcular las ventas del mes
+    fecha_actual = datetime.now()
+    primer_dia_mes = datetime(fecha_actual.year, fecha_actual.month, 1)
+    ventas_del_mes = Compra.query.with_entities(db.func.sum(db.func.coalesce(Compra.Monto, 0)))\
+                             .filter(Compra.Fecha_compra >= primer_dia_mes, Compra.Fecha_compra < fecha_actual)\
+                             .scalar() or 0
+
+    pagos_vencidos = Pago.query.filter(Pago.Fecha_pago < fecha_actual, Pago.Estado == 'debe').all()
+    inventarios = Inventario.query.all()
+    clientes_pendientes = Cliente.query.join(Credito).filter(Credito.Estado_Crédito == 'Pendiente').all()
+    return render_template('panel_gerente.html', total_clientes=total_clientes, total_creditos=total_creditos, total_inventario=total_inventario, ventas_del_mes=ventas_del_mes, total_solicitudes_pendientes=total_solicitudes_pendientes,pagos_vencidos=pagos_vencidos, inventarios=inventarios,clientes_pendientes=clientes_pendientes)
+  
+
+@main_bp.route('/panel_asesor')
+def panel_asesor():
+    # Lógica específica para el asesor de ventas
+    return render_template('panel_asesor.html')
+
+@main_bp.route('/panel_asistente')
+def panel_asistente():
+    # Lógica específica para el asistente administrativo
+    return render_template('panel_asistente.html')
