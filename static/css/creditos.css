@@ -6,6 +6,50 @@ body {
     background-color: #f4f7fa;
 }
 
+/* Barra de encabezado */
+.header-bar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #007BFF; /* Azul claro */
+    color: white;
+    width: 100%; /* Asegura que ocupe todo el ancho del contenedor */
+    padding: 20px;
+    box-sizing: border-box; /* Incluye el padding dentro del ancho total */
+    overflow: hidden; /* Previene que el contenido se desborde */
+}
+
+.title-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+h1 {
+    margin: 0;
+    font-size: 28px;
+    text-align: center;
+    color: white;
+    width: 100%; /* Asegura que el título ocupe el ancho del contenedor */
+    word-wrap: break-word; /* Evita que el texto se salga si es largo */
+}
+
+/* Logo debajo del título */
+/* Contenedor del logo */
+.logo-container {
+    display: flex;
+    justify-content: center;  /* Centra horizontalmente */
+    align-items: center;      /* Alinea verticalmente (en caso de que haya más contenido en el futuro) */
+    margin-top: 10px;         /* Espacio entre el título y el logo */
+}
+
+.logo {
+    width: 150px;  /* Ajusta el tamaño del logo */
+    height: auto;  /* Mantiene la proporción del logo */
+}
+
+
 /* Contenedor principal */
 .container {
     width: 80%;
@@ -14,12 +58,6 @@ body {
     background-color: white;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-/* Encabezado */
-h1 {
-    text-align: center;
-    color: #333;
 }
 
 /* Tabla */
@@ -36,11 +74,17 @@ th, td {
 }
 
 th {
-    background-color: #f4f4f4;
+    background-color: #e1f5fe;  /* Azul claro */
+    color: #333;
+    border-bottom: 2px solid #007BFF;
 }
 
 td {
     background-color: #fff;
+}
+
+tr:hover {
+    background-color: #f1f1f1;
 }
 
 /* Botones de acción (ver, aprobar, rechazar, editar, eliminar) */
@@ -55,22 +99,28 @@ button {
 
 /* Colores de botones */
 .btn-ver {
-    background-color: #4CAF50;
+    background-color: #28a745;
     color: white;
+    padding: 8px 12px;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.btn-editar {
+    background-color: #ffc107;
+    color: white;
+    padding: 8px 12px;
+    text-decoration: none;
+    border-radius: 5px;
 }
 
 .btn-aprobar {
-    background-color: #2196F3;
+    background-color: #007BFF; /* Azul claro */
     color: white;
 }
 
 .btn-rechazar {
-    background-color: #f44336;
-    color: white;
-}
-
-.btn-editar {
-    background-color: #ff9800;
+    background-color: #dc3545;
     color: white;
 }
 
@@ -88,23 +138,25 @@ button {
 
 .btn-agregar {
     padding: 8px 20px;
-    background-color: #4CAF50; /* Verde */
+    background-color: #007BFF; /* Azul claro */
     color: white;
     border-radius: 5px;
     font-size: 14px;
     cursor: pointer;
     border: none;
+    margin-top: 20px; /* Añadido margen superior */
+    text-decoration: none;  /* Elimina el subrayado */
 }
 
 .btn-agregar:hover {
-    background-color: #45a049;
+    background-color: #0056b3;
 }
 
 /* Botón Volver al Panel */
 .btn-volver {
     padding: 8px 20px;
-    background-color: #9E9E9E;
-    color: white;
+    background-color: #e1f5fe;  /* Azul claro */
+    color: #333;
     border-radius: 5px;
     font-size: 14px;
     cursor: pointer;
@@ -113,5 +165,5 @@ button {
 }
 
 .btn-volver:hover {
-    background-color: #757575;
+    background-color: #b3e5fc;
 }
