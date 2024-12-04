@@ -7,8 +7,18 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/inventarios.css') }}">
 </head>
 <body>
+
     <div class="container">
-        <h1>Gestión de Inventario</h1>
+        <div class="header-bar">
+            <div class="title-container">
+                <h1>Gestión de Inventario</h1>
+            </div>
+        </div>
+        <div class="logo-container">
+            
+            <img src="{{ url_for('static', filename='images/logof.jpeg') }}" alt="Logo" class="logo">
+        </div>
+        
         
         <!-- Sección de filtros -->
         <div class="search-bar">
@@ -54,15 +64,12 @@
             </tbody>
         </table>
 
-        <!-- Botones para agregar -->
-        <div class="action-buttons">
-            <button class="btn add">Agregar Inventario</button>
-        </div>
+        <!-- Botones para agregar y volver al panel -->
+<div class="action-buttons-container">
+    <button class="btn-volver" onclick="window.location.href='/panel'">Volver al Panel</button>
+    <button class="btn add">Agregar Inventario</button>
+</div>
 
-        <!-- Botón para volver al panel -->
-        <div class="back-button-container">
-            <button class="btn-volver" onclick="window.location.href='/panel'">Volver al Panel</button>
-        </div>
 
     </div>
 </body>
