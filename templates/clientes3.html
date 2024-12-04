@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Clientes</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/clientes.css') }}">
+</head>
+<body>
+    <!-- Contenedor principal -->
+    <section class="clientes-container">
+        <div class="header-bar">
+            <div class="title-container">
+                <h1>Gestión de Clientes</h1>
+            </div>
+            <!-- Logo debajo del título -->
+            
+        </div>
+        <div class="logo-container">
+            <img src="{{ url_for('static', filename='images/logof.jpeg') }}" alt="Logo" class="logo">
+        </div>
+
+        <!-- Sección de tabla de clientes -->
+        <div class="clientes-header">
+            <h2>Lista de Clientes</h2>
+            <button onclick="window.location.href='/nuevo_cliente'" class="btn-nuevo">Agregar Nuevo Cliente</button>
+        </div>
+
+        <!-- Tabla de Clientes -->
+        <table class="clientes-table">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Email</th>
+                    <th>Teléfono</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for cliente in clientes %}
+                <tr>
+                    <td>{{ cliente.Nombre }}</td>
+                    <td>{{ cliente.Correo_electrónico }}</td>
+                    <td>{{ cliente.Teléfono }}</td>
+                    <td>{{ cliente.Estado_cliente }}</td>
+                    <td>
+                        <button class="btn-editar" onclick="window.location.href='/editar_cliente/{{ cliente.ID_Cliente }}'">Editar</button>
+                        <form action="/eliminar_cliente/{{ cliente.ID_Cliente }}" method="POST" style="display:inline;">
+                            <button class="btn-eliminar" type="submit">Eliminar</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Botón Volver al Panel -->
+        <div class="back-button-container">
+            <button class="btn-volver" onclick="window.location.href='/panel_asesor'">Volver al Panel</button>
+        </div>
+    </section>
+</body>
+</html>

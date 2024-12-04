@@ -43,7 +43,21 @@ def creditos():
     # Pasar los créditos al template
     return render_template('creditos.html', creditos=creditos)
 
+@main_bp.route('/creditos2')
+def creditos2():
+    # Obtener todos los créditos desde la base de datos
+    creditos = Credito.query.all()
+    
+    # Pasar los créditos al template
+    return render_template('creditos2.html', creditos=creditos)
 
+@main_bp.route('/creditos3')
+def creditos3():
+    # Obtener todos los créditos desde la base de datos
+    creditos = Credito.query.all()
+    
+    # Pasar los créditos al template
+    return render_template('creditos3.html', creditos=creditos)
 @main_bp.route('/inventario')
 def inventario():
     # Obtener todos los inventarios desde la base de datos
@@ -51,6 +65,14 @@ def inventario():
     
     # Pasar los inventarios al template
     return render_template('inventarios.html', inventarios=inventarios)
+
+@main_bp.route('/inventario2')
+def inventario2():
+    # Obtener todos los inventarios desde la base de datos
+    inventarios = Inventario.query.all()
+    
+    # Pasar los inventarios al template
+    return render_template('inventarios2.html', inventarios=inventarios)
 
 @main_bp.route('/ver_inventario/<int:id>', methods=['GET'])
 def ver_inventario(id):
@@ -291,6 +313,21 @@ def clientes():
     # Pasar los clientes al template
     return render_template('clientes.html', clientes=clientes)
 
+@main_bp.route('/clientes2')
+def clientes2():
+    # Obtener todos los clientes desde la base de datos
+    clientes = Cliente.query.all()
+    
+    # Pasar los clientes al template
+    return render_template('clientes2.html', clientes=clientes)
+
+@main_bp.route('/clientes3')
+def clientes3():
+    # Obtener todos los clientes desde la base de datos
+    clientes = Cliente.query.all()
+    
+    # Pasar los clientes al template
+    return render_template('clientes3.html', clientes=clientes)
 @main_bp.route('/nuevo_cliente', methods=['GET', 'POST'])
 def nuevo_cliente():
     if request.method == 'POST':
