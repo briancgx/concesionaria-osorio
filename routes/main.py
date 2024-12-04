@@ -16,7 +16,7 @@ def clientes():
 def panel_control():
     total_clientes = Cliente.query.count()
     total_creditos = Credito.query.filter(Credito.Estado_Crédito == 'Aprobado').with_entities(db.func.sum(Credito.Monto_crédito)).scalar() or 0
-    total_inventario = Inventario.query.count()
+    total_inventario = Inventario.query.filter(Inventario.Estado == 'Disponible').count()
     total_solicitudes_pendientes = Credito.query.filter(Credito.Estado_Crédito == 'Pendiente').count()  # Contar créditos pendientes
     # Calcular las ventas del mes
     # Calcular las ventas del mes
