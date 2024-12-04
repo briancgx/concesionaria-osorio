@@ -45,7 +45,74 @@ def creditos():
 
 @main_bp.route('/inventario')
 def inventario():
-    return render_template('inventarios.html')
+    # Obtener todos los inventarios desde la base de datos
+    inventarios = Inventario.query.all()
+    
+    # Pasar los inventarios al template
+    return render_template('inventarios.html', inventarios=inventarios)
+
+@main_bp.route('/ver_inventario/<int:id>', methods=['GET'])
+def ver_inventario(id):
+    inventario = Inventario.query.get_or_404(id)
+    return render_template('ver_inventario.html', inventario=inventario)
+
+@main_bp.route('/editar_inventario/<int:id>', methods=['GET', 'POST'])
+def editar_inventario(id):
+    inventario = Inventario.query.get_or_404(id)
+
+    if request.method == 'POST':
+        # Obtener los datos del formulario
+        inventario.Ubicación = request.form['ubicacion']
+        inventario.Estado = request.form['estado']
+        
+        # Guardar los cambios en la base de datos
+        db.session.commit()
+        
+        flash('Inventario actualizado exitosamente', 'success')
+        return redirect(url_for('main.inventario'))
+    
+    return render_template('editar_inventario.html', inventario=inventario)
+
+
+@main_bp.route('/eliminar_inventario/<int:id>', methods=['POST'])
+def eliminar_inventario(id):
+    inventario = Inventario.query.get_or_404(id)
+    
+    # Eliminar el inventario de la base de datos
+    db.session.delete(inventario)
+    db.session.commit()
+    
+    flash('Inventario eliminado', 'danger')
+    return redirect(url_for('main.inventario'))
+
+@main_bp.route('/agregar_inventario', methods=['GET', 'POST'])
+def agregar_inventario():
+    if request.method == 'POST':
+        # Obtener los datos del formulario
+        id_vehiculo = request.form['id_vehiculo']
+        ubicacion = request.form['ubicacion']
+        estado = request.form['estado']
+        
+        # Crear un nuevo inventario
+        nuevo_inventario = Inventario(
+            ID_Vehículo=id_vehiculo,
+            Ubicación=ubicacion,
+            Estado=estado
+        )
+        
+        # Guardar el inventario en la base de datos
+        db.session.add(nuevo_inventario)
+        db.session.commit()
+        
+        flash('Inventario agregado exitosamente', 'success')
+        return redirect(url_for('main.inventario'))
+    
+    # Obtener la lista de vehículos para mostrar en el formulario
+    vehiculos = Vehiculo.query.all()
+
+    # Pasar los vehículos al template
+    return render_template('agregar_inventario.html', vehiculos=vehiculos)
+
 
 @main_bp.route('/usuarios')
 def usuarios():
