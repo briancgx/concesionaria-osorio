@@ -12,7 +12,7 @@
 
         <!-- Botón para agregar un nuevo usuario -->
         <div class="actions">
-            <button class="btn agregar-btn">Agregar Usuario</button>
+            <button class="btn agregar-btn" onclick="window.location.href='{{ url_for('main.agregar_usuario') }}'">Agregar Usuario</button>
         </div>
 
         <!-- Tabla de usuarios -->
@@ -27,18 +27,21 @@
                 </tr>
             </thead>
             <tbody>
-                <!-- Ejemplo de fila de usuario -->
-                <tr>
-                    <td>Juan Pérez</td>
-                    <td>Administrador</td>
-                    <td>01/01/2022</td>
-                    <td>15/11/2024</td>
-                    <td>
-                        <button class="btn editar-btn">Editar</button>
-                        <button class="btn eliminar-btn">Eliminar</button>
-                    </td>
-                </tr>
-                <!-- Más filas de usuarios -->
+                {% for usuario in usuarios %}
+                    <tr>
+                        <td>{{ usuario.Nombre_usuario }}</td>
+                        <td>{{ usuario.Rol }}</td>
+                        <td>{{ usuario.Fecha_creacion }}</td>
+                        <td>{{ usuario.Ultimo_acceso }}</td>
+                        <td>
+                            <a href="{{ url_for('main.ver_usuario', id=usuario.ID_Usuario) }}" class="btn editar-btn">Ver</a>
+                            <a href="{{ url_for('main.editar_usuario', id=usuario.ID_Usuario) }}" class="btn editar-btn">Editar</a>
+                            <form action="{{ url_for('main.eliminar_usuario', id=usuario.ID_Usuario) }}" method="POST" style="display:inline;">
+                                <button type="submit" class="btn eliminar-btn" onclick="return confirm('¿Estás seguro de que deseas eliminar este usuario?')">Eliminar</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
             </tbody>
         </table>
 
