@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ver Cliente</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/clientes.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Ver Cliente</h1>
+    </header>
+
+    <section class="cliente-details">
+        <p><strong>Nombre:</strong> {{ cliente.Nombre }}</p>
+        <p><strong>Correo Electrónico:</strong> {{ cliente.Correo_electronico }}</p>
+        <p><strong>Teléfono:</strong> {{ cliente.Teléfono }}</p>
+        <p><strong>Dirección:</strong> {{ cliente.Dirección }}</p>
+        <p><strong>Estado:</strong> {{ cliente.Estado_cliente }}</p>
+
+        <div class="back-button-container">
+            <button class="btn-volver" onclick="window.location.href='/clientes'">Volver</button>
+        </div>
+    </section>
+</body>
+</html>

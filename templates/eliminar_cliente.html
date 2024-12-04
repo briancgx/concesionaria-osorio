@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eliminar Cliente</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/clientes.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Eliminar Cliente</h1>
+        <button onclick="window.location.href='/clientes'">Volver a la Lista de Clientes</button>
+    </header>
+
+    <form action="/eliminar_cliente/{{ cliente.ID_Cliente }}" method="POST">
+        <p>¿Estás seguro de que deseas eliminar al cliente {{ cliente.Nombre }}?</p>
+        <button type="submit">Sí, eliminar</button>
+        <button onclick="window.location.href='/clientes'">Cancelar</button>
+    </form>
+</body>
+</html>
