@@ -7,15 +7,20 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/clientes.css') }}">
 </head>
 <body>
-    <!-- Encabezado -->
-    <header>
-        <h1>Gestión de Clientes</h1>
-        <nav>
-        </nav>
-    </header>
-
-    <!-- Sección de Tabla de Clientes -->
+    <!-- Contenedor principal -->
     <section class="clientes-container">
+        <div class="header-bar">
+            <div class="title-container">
+                <h1>Gestión de Clientes</h1>
+            </div>
+            <!-- Logo debajo del título -->
+            
+        </div>
+        <div class="logo-container">
+            <img src="{{ url_for('static', filename='images/logof.jpeg') }}" alt="Logo" class="logo">
+        </div>
+
+        <!-- Sección de tabla de clientes -->
         <div class="clientes-header">
             <h2>Lista de Clientes</h2>
             <button onclick="window.location.href='/nuevo_cliente'" class="btn-nuevo">Agregar Nuevo Cliente</button>
@@ -50,6 +55,7 @@
             </tbody>
         </table>
 
+        <!-- Botón Volver al Panel -->
         <div class="back-button-container">
             <button class="btn-volver" onclick="window.location.href='/panel'">Volver al Panel</button>
         </div>
