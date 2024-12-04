@@ -73,12 +73,13 @@ class Inventario(db.Model):
     __tablename__ = 'Inventario'
     
     ID_Inventario = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    ID_Vehículo = db.Column(db.Integer, db.ForeignKey('Vehiculos.ID_Vehiculo'), nullable=False)
+    ID_Vehículo = db.Column(db.Integer, db.ForeignKey('Vehículos.ID_Vehículo'), nullable=False)
     Ubicación = db.Column(db.String(50), nullable=True)
     Estado = db.Column(db.String(20), nullable=True)
 
     # Relación con el modelo Vehiculo
-    # vehiculo = db.relationship('Vehiculo', backref='inventarios')
+    vehiculo = db.relationship('Vehiculo', backref='inventarios')
+
 
 class AtencionAlCliente(db.Model):
     __tablename__ = 'Atención_al_Cliente'
