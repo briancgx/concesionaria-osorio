@@ -19,20 +19,8 @@ header h1 {
 
 /* Barra de navegación */
 nav {
-    
     margin-top: 20px;
     text-align: center;
-}
-
-/* Botón Volver al Panel */
-.btn-volver {
-    background-color: #4CAF50;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    text-decoration: none;
 }
 
 /* Contenedor principal de clientes */
@@ -43,6 +31,46 @@ nav {
     background-color: white;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Barra de encabezado dentro del contenedor */
+.header-bar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #007BFF; /* Azul claro */
+    color: white;
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.title-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+h1 {
+    margin: 0;
+    font-size: 28px;
+    text-align: center;
+    color: white;
+    width: 100%;
+    word-wrap: break-word;
+}
+
+/* Logo debajo del título */
+.logo-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.logo {
+    width: 150px;
+    height: auto;
 }
 
 /* Encabezado de la tabla */
@@ -58,8 +86,8 @@ nav {
 }
 
 /* Botón Agregar Cliente */
-.btn-agregar {
-    background-color: #008CBA;
+.btn-nuevo {
+    background-color: #007BFF; /* Azul claro */
     color: white;
     padding: 10px 20px;
     border: none;
@@ -81,7 +109,7 @@ th, td {
 }
 
 th {
-    background-color: #f4f4f4;
+    background-color: #e1f5fe;  /* Azul claro */
 }
 
 td {
@@ -100,33 +128,33 @@ button {
 
 /* Colores de botones */
 .btn-editar {
-    background-color: #018730;
+    background-color: #ffc107; /* Azul claro */
     color: white;
 }
 
 .btn-eliminar {
-    background-color: #FF5733;
+    background-color: #e91e63;
     color: white;
 }
 
 /* Efecto hover en los botones */
 button:hover {
     opacity: 0.8;
-    
 }
 
-/* Estilo del botón Volver al Panel (Coincidiendo con el estilo de créditos e inventarios) */
+/* Botón Volver al Panel */
 .btn-volver {
     padding: 8px 20px;
-    background-color: #9E9E9E; /* Color gris */
-    color: white;
+    background-color: #e1f5fe; /* Azul claro */
+    color: #333;
     border-radius: 5px;
     font-size: 14px;
     cursor: pointer;
     border: none;
     text-decoration: none;
+    margin-top: 20px; /* Añadido espacio superior */
 }
 
 .btn-volver:hover {
-    background-color: #757575; /* Color gris oscuro al pasar el ratón */
+    background-color: #b3e5fc;
 }
