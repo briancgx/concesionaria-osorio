@@ -30,7 +30,7 @@ class Cliente(db.Model):
 class Credito(db.Model):
     __tablename__ = 'Créditos'
     
-    ID_Credito = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    ID_Crédito = db.Column(db.Integer, primary_key=True, autoincrement=True)
     ID_Cliente = db.Column(db.Integer, db.ForeignKey('Clientes.ID_Cliente'), nullable=False)
     Monto_crédito = db.Column(db.Numeric(10, 2), nullable=True)
     Interés = db.Column(db.Numeric(4, 2), nullable=True)
@@ -96,18 +96,19 @@ class HistorialCredito(db.Model):
     __tablename__ = 'Historial_Crédito'
 
     ID_Historial = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    ID_Crédito = db.Column(db.Integer, db.ForeignKey('Créditos.ID_Credito'), nullable=True)
+    ID_Crédito = db.Column(db.Integer, db.ForeignKey('Créditos.ID_Crédito'), nullable=True)  # Asegúrate de usar 'ID_Crédito' aquí
     Fecha_actualización = db.Column(db.Date, nullable=True)
     Estado = db.Column(db.String(20), nullable=True)
 
     # Relación con el modelo Crédito
     credito = db.relationship('Credito', backref='historiales')
 
+
 class Pago(db.Model):
     __tablename__ = 'Pagos'
 
     ID_Pago = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    ID_Crédito = db.Column(db.Integer, db.ForeignKey('Créditos.ID_Credito'), nullable=True)
+    ID_Crédito = db.Column(db.Integer, db.ForeignKey('Créditos.ID_Crédito'), nullable=True)
     Monto_pago = db.Column(db.Numeric(10, 2), nullable=True)
     Fecha_pago = db.Column(db.Date, nullable=True)
 

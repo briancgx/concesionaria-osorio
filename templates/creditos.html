@@ -28,11 +28,13 @@
                     </tr>
                 </thead>
                 <tbody>
+                    <!-- Iterar sobre los créditos -->
+                    {% for credito in creditos %}
                     <tr>
-                        <td>Juan Pérez</td>
-                        <td>$10,000</td>
-                        <td>12 meses</td>
-                        <td>Aprobado</td>
+                        <td>{{ credito.cliente.Nombre }}</td>  <!-- Nombre del cliente asociado al crédito -->
+                        <td>${{ credito.Monto_crédito }}</td>  <!-- Monto del crédito -->
+                        <td>{{ credito.Fecha_otorgamiento.strftime('%d/%m/%Y') }}</td>  <!-- Fecha de otorgamiento -->
+                        <td>{{ credito.Estado_Crédito }}</td>  <!-- Estado del crédito -->
                         <td>
                             <button class="btn-ver">Ver</button>
                             <button class="btn-editar">Editar</button>
@@ -41,7 +43,7 @@
                             <button class="btn-eliminar">Eliminar</button>
                         </td>
                     </tr>
-                    <!-- Más filas de crédito pueden ir aquí -->
+                    {% endfor %}
                 </tbody>
             </table>
         </div>

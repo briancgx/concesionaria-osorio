@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, flash, redirect, render_template, request, url_for
 from models import db, Cliente, Credito, Inventario, Vehiculo, Compra
 from datetime import datetime
 
@@ -35,7 +35,12 @@ def base():
 
 @main_bp.route('/creditos')
 def creditos():
-    return render_template('creditos.html')
+    # Obtener todos los créditos desde la base de datos
+    creditos = Credito.query.all()
+    
+    # Pasar los créditos al template
+    return render_template('creditos.html', creditos=creditos)
+
 
 @main_bp.route('/inventario')
 def inventario():
@@ -44,3 +49,35 @@ def inventario():
 @main_bp.route('/usuarios')
 def usuarios():
     return render_template('usuarios.html')
+
+@main_bp.route('/agregar_credito', methods=['GET', 'POST'])
+def agregar_credito():
+    if request.method == 'POST':
+        # Obtener los datos del formulario
+        id_cliente = request.form['id_cliente']
+        monto_credito = request.form['monto_credito']
+        interes = request.form['interes']
+        fecha_otorgamiento = request.form['fecha_otorgamiento']
+        estado_credito = request.form['estado_credito']
+        
+        # Crear un nuevo crédito
+        nuevo_credito = Credito(
+            ID_Cliente=id_cliente,
+            Monto_crédito=monto_credito,
+            Interés=interes,
+            Fecha_otorgamiento=fecha_otorgamiento,
+            Estado_Crédito=estado_credito
+        )
+        
+        # Guardar el crédito en la base de datos
+        db.session.add(nuevo_credito)
+        db.session.commit()
+        
+        flash('Crédito agregado exitosamente', 'success')
+        return redirect(url_for('main.creditos'))
+    
+    # Obtener la lista de clientes para mostrar en el formulario
+    clientes = Cliente.query.all()
+
+    # Pasar los clientes al template
+    return render_template('agregar_credito.html', clientes=clientes)
