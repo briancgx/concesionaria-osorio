@@ -30,7 +30,19 @@ def login():
         
         if usuario and usuario.Contraseña == contrasena:
             flash('¡Inicio de sesión exitoso!', 'success')
-            return redirect(url_for('main.panel_control'))
+            #return redirect(url_for('main.panel_control'))
+                        # Redirigir según el rol del usuario
+            if usuario.Rol == 'Administrador':
+                return redirect(url_for('main.panel_control'))  # Redirige al panel del administrador
+            elif usuario.Rol == 'Gerente':
+                return redirect(url_for('main.panel_gerente'))  # Redirige al panel del gerente
+            elif usuario.Rol == 'Asesor Ventas':
+                return redirect(url_for('main.panel_asesor'))  # Redirige al panel del asesor de ventas
+            elif usuario.Rol == 'Asistente':
+                return redirect(url_for('main.panel_asistente'))  # Redirige al panel del asistente administrativo
+            else:
+                flash('Rol no reconocido', 'danger')
+                return redirect(url_for('login'))
         else:
             flash('Credenciales incorrectas. Intenta de nuevo.', 'error')
             return redirect(url_for('login'))

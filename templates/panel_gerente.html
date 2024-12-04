@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Control</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/panel_control.css') }}">
+</head>
+<body>
+    <div class="panel-container">
+        <!-- Visión General (KPI) -->
+        <div class="kpi-section">
+            <h2>Visión General</h2>
+            <div class="kpi-container">
+                <div class="kpi-item">
+                    <p><strong>Clientes Activos:</strong>  {{ total_clientes }} </p>
+                </div>
+                <div class="kpi-item">
+                    <p><strong>Créditos Aprobados:</strong>${{ total_creditos }} </p>
+                </div>
+                <div class="kpi-item">
+                    <p><strong>Inventario Disponible:</strong> {{ total_inventario }}  unidades</p>
+                </div>
+                <div class="kpi-item">
+                    <p><strong>Ventas del Mes:</strong> ${{ ventas_del_mes }} </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Alertas/Notificaciones -->
+        <div class="alerts-section">
+            <h2>Alertas y Notificaciones</h2>
+            <ul>
+                {% for pago in pagos_vencidos %}
+                    <li class="alert alert-danger">Pago vencido de cliente #{{ pago.credito.ID_Cliente }}</li>
+                {% endfor %}
+                <li>Créditos por aprobar: {{ total_solicitudes_pendientes }} solicitudes pendientes</li>
+                
+                {% for inventario in inventarios %}
+                {% if inventario.Estado == 'No Disponible' %}
+                    <li class="alert alert-danger">
+                        Inventario: El auto {{ inventario.ID_Vehículo }} no está disponible.
+                    </li>
+                {% endif %}
+            {% endfor %}
+            {% for cliente in clientes_pendientes %}
+                <li class="alert alert-warning">{{ cliente.Nombre }} tiene una solicitud pendiente.</li>
+            {% else %}
+                <li>No hay clientes con solicitudes pendientes.</li>
+            {% endfor %}
+            
+
+         
+            </ul>
+        </div>
+
+        <!-- Botones de Acceso Rápido -->
+        <div class="quick-access">
+            <h2>Accesos Rápidos</h2>
+            <div class="button-container">
+                <button onclick="window.location.href='/clientes'">Clientes</button>
+                <button onclick="window.location.href='/creditos'">Créditos</button>
+                <button onclick="window.location.href='/inventario'">Inventario</button>
+                
+            </div>
+        </div>
+    </div>
+</body>
+</html>
