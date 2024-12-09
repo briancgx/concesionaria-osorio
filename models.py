@@ -1,9 +1,9 @@
+from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
 
 # Crear la instancia de SQLAlchemy
 db = SQLAlchemy()
 
-# Definición del modelo para la tabla Usuarios
 class Usuario(db.Model):
     __tablename__ = 'Usuarios'
     
@@ -11,6 +11,9 @@ class Usuario(db.Model):
     Nombre_usuario = db.Column(db.String(50), unique=True, nullable=False)
     Contraseña = db.Column(db.String(100), nullable=False)
     Rol = db.Column(db.String(50), nullable=False)
+    Fecha_creacion = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)  # Fecha de creación
+    Ultimo_acceso = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)  # Último acceso
+
 
 # Definición del modelo para la tabla Clientes
 class Cliente(db.Model):

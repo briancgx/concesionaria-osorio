@@ -24,6 +24,14 @@
                 <option value="Asistente">Asistente</option>
             </select>
             
+            <!-- Fecha de Creación -->
+            <label for="fecha_creacion">Fecha de Creación:</label>
+            <input type="datetime-local" id="fecha_creacion" name="fecha_creacion" value="{{ current_time }}" required>
+            
+            <!-- Último Acceso -->
+            <label for="ultimo_acceso">Último Acceso:</label>
+            <input type="datetime-local" id="ultimo_acceso" name="ultimo_acceso" value="{{ current_time }}" required>
+            
             <button type="submit">Guardar Usuario</button>
         </form>
 

@@ -21,9 +21,17 @@
                 <option value="Gerente" {% if usuario.Rol == 'Gerente' %}selected{% endif %}>Gerente</option>
                 <option value="Administrador" {% if usuario.Rol == 'Administrador' %}selected{% endif %}>Administrador</option>
                 <option value="Asesor Ventas" {% if usuario.Rol == 'Asesor Ventas' %}selected{% endif %}>Asesor Ventas</option>
-                <option value="Asistente" {% if usuario.Rol == 'Asistente Administrativo' %}selected{% endif %}>Asistente Administrativo</option>
+                <option value="Asistente Administrativo" {% if usuario.Rol == 'Asistente Administrativo' %}selected{% endif %}>Asistente Administrativo</option>
             </select>
+
+            <!-- Fecha de Creación -->
+            <label for="fecha_creacion">Fecha de Creación:</label>
+            <input type="datetime-local" id="fecha_creacion" name="fecha_creacion" value="{{ usuario.Fecha_creacion.strftime('%Y-%m-%dT%H:%M') }}" required>
             
+            <!-- Último Acceso -->
+            <label for="ultimo_acceso">Último Acceso:</label>
+            <input type="datetime-local" id="ultimo_acceso" name="ultimo_acceso" value="{{ usuario.Ultimo_acceso.strftime('%Y-%m-%dT%H:%M') }}" required>
+
             <button type="submit">Guardar Cambios</button>
         </form>
 
