@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/inventarios.css') }}">
 </head>
 <body>
-
     <div class="container">
         <div class="header-bar">
             <div class="title-container">
@@ -20,10 +19,27 @@
         
         <!-- Sección de filtros -->
         <div class="search-bar">
-            <input type="text" placeholder="Buscar artículo..." id="searchInput">
-            <button id="filterButton">Filtrar</button>
+            <form method="GET" action="{{ url_for('main.inventario2') }}" class="search-form">
+                <input type="text" 
+                       name="searchInput" 
+                       placeholder="Buscar por nombre del vehículo..." 
+                       value="{{ request.args.get('searchInput', '') }}"
+                       class="search-input">
+                <button type="submit" class="search-button">Filtrar</button>
+            </form>
         </div>
         
+        <!-- Mensaje cuando no hay resultados -->
+        {% if inventarios|length == 0 %}
+            <div class="alert alert-info" role="alert">
+                {% if request.args.get('searchInput') %}
+                    No se encontraron vehículos que coincidan con "{{ request.args.get('searchInput') }}"
+                {% else %}
+                    No hay inventarios registrados
+                {% endif %}
+            </div>
+        {% endif %}
+
         <!-- Tabla de Inventario -->
         <table>
             <thead>
@@ -57,12 +73,11 @@
             </tbody>
         </table>
 
-        <!-- Botones para agregar y volver al panel -->
+        <!-- Botón para volver al panel -->
         <div class="action-buttons-container">
             <button class="btn-volver" onclick="window.location.href='/panel_gerente'">Volver al Panel</button>
             <button class="btn add" onclick="window.location.href='{{ url_for('main.agregar_inventario') }}'">Agregar Inventario</button>
         </div>
     </div>
-
 </body>
 </html>

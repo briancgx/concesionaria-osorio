@@ -78,7 +78,7 @@ class Inventario(db.Model):
     Estado = db.Column(db.String(20), nullable=True)
 
     # Relación con el modelo Vehiculo
-    vehiculo = db.relationship('Vehiculo', backref='inventarios')
+    vehiculo = db.relationship('Vehiculo', backref='inventario', lazy=True)
 
 
 class AtencionAlCliente(db.Model):

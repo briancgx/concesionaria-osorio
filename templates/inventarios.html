@@ -20,10 +20,27 @@
         
         <!-- Sección de filtros -->
         <div class="search-bar">
-            <input type="text" placeholder="Buscar artículo..." id="searchInput">
-            <button id="filterButton">Filtrar</button>
+            <form method="GET" action="{{ url_for('main.inventario') }}" class="search-form">
+                <input type="text" 
+                       name="searchInput" 
+                       placeholder="Buscar por nombre del vehículo..." 
+                       value="{{ request.args.get('searchInput', '') }}"
+                       class="search-input">
+                <button type="submit" class="search-button">Filtrar</button>
+            </form>
         </div>
         
+        <!-- Agregar mensaje cuando no hay resultados -->
+        {% if inventarios|length == 0 %}
+            <div class="alert alert-info" role="alert">
+                {% if request.args.get('searchInput') %}
+                    No se encontraron vehículos que coincidan con "{{ request.args.get('searchInput') }}"
+                {% else %}
+                    No hay inventarios registrados
+                {% endif %}
+            </div>
+        {% endif %}
+
         <!-- Tabla de Inventario -->
         <table>
             <thead>

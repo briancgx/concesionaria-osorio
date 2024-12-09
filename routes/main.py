@@ -10,7 +10,7 @@ def dashboard():
 
 @main_bp.route('/panel')
 def panel_control():
-    total_clientes = Cliente.query.count()
+    total_clientes = Cliente.query.filter(Cliente.Estado_cliente == 'Activo').count()
     total_creditos = Credito.query.filter(Credito.Estado_Crédito == 'Aprobado').with_entities(db.func.sum(Credito.Monto_crédito)).scalar() or 0
     total_inventario = Inventario.query.filter(Inventario.Estado == 'Disponible').count()
     total_solicitudes_pendientes = Credito.query.filter(Credito.Estado_Crédito == 'Pendiente').count()  # Contar créditos pendientes
@@ -58,20 +58,55 @@ def creditos3():
     
     # Pasar los créditos al template
     return render_template('creditos3.html', creditos=creditos)
+
 @main_bp.route('/inventario')
 def inventario():
-    # Obtener todos los inventarios desde la base de datos
-    inventarios = Inventario.query.all()
+    # Obtener el término de búsqueda del input
+    busqueda = request.args.get('searchInput', '')
     
-    # Pasar los inventarios al template
+    if busqueda:
+        # Realizar búsqueda por nombre completo del vehículo
+        inventarios = Inventario.query.join(Vehiculo).filter(
+            db.or_(
+                Vehiculo.Marca.ilike(f'%{busqueda}%'),
+                Vehiculo.Modelo.ilike(f'%{busqueda}%'),
+                db.func.concat(
+                    Vehiculo.Marca, ' ', 
+                    Vehiculo.Modelo, ' (', 
+                    db.cast(Vehiculo.Año, db.String), 
+                    ')'
+                ).ilike(f'%{busqueda}%')
+            )
+        ).all()
+    else:
+        # Si no hay término de búsqueda, mostrar todos los inventarios
+        inventarios = Inventario.query.all()
+    
     return render_template('inventarios.html', inventarios=inventarios)
 
 @main_bp.route('/inventario2')
 def inventario2():
-    # Obtener todos los inventarios desde la base de datos
-    inventarios = Inventario.query.all()
+    # Obtener el término de búsqueda del input
+    busqueda = request.args.get('searchInput', '')
     
-    # Pasar los inventarios al template
+    if busqueda:
+        # Realizar búsqueda por marca y modelo del vehículo
+        inventarios = Inventario.query.join(Vehiculo).filter(
+            db.or_(
+                Vehiculo.Marca.ilike(f'%{busqueda}%'),
+                Vehiculo.Modelo.ilike(f'%{busqueda}%'),
+                db.func.concat(
+                    Vehiculo.Marca, ' ', 
+                    Vehiculo.Modelo, ' (', 
+                    db.cast(Vehiculo.Año, db.String), 
+                    ')'
+                ).ilike(f'%{busqueda}%')
+            )
+        ).all()
+    else:
+        # Si no hay término de búsqueda, mostrar todos los inventarios
+        inventarios = Inventario.query.all()
+    
     return render_template('inventarios2.html', inventarios=inventarios)
 
 @main_bp.route('/ver_inventario/<int:id>', methods=['GET'])
@@ -419,7 +454,7 @@ def agregar_cliente():
 
 @main_bp.route('/panel_gerente')
 def panel_gerente():
-    total_clientes = Cliente.query.count()
+    total_clientes = Cliente.query.filter(Cliente.Estado_cliente == 'Activo').count()
     total_creditos = Credito.query.filter(Credito.Estado_Crédito == 'Aprobado').with_entities(db.func.sum(Credito.Monto_crédito)).scalar() or 0
     total_inventario = Inventario.query.filter(Inventario.Estado == 'Disponible').count()
     total_solicitudes_pendientes = Credito.query.filter(Credito.Estado_Crédito == 'Pendiente').count()  # Contar créditos pendientes
