@@ -6,7 +6,7 @@ from models import db, Usuario, Cliente, Credito, Vehiculo, Compra, Inventario, 
 app = Flask(__name__)
 
 # Configuración de la base de datos
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://osorio:password@35.193.194.54/osorio'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://admin:admin@40.76.251.76/osorio'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # Desactivar seguimiento de modificaciones
 app.secret_key = 'supersecretkey'  # Necesario para usar flash messages
 
