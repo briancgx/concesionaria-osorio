@@ -1,21 +1,42 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Eliminar Cliente</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/clientes.css') }}">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Eliminar Cliente</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/clientes.css') }}">
 </head>
 <body>
-    <header>
-        <h1>Eliminar Cliente</h1>
-        <button onclick="window.location.href='/clientes'">Volver a la Lista de Clientes</button>
-    </header>
 
-    <form action="/eliminar_cliente/{{ cliente.ID_Cliente }}" method="POST">
-        <p>¿Estás seguro de que deseas eliminar al cliente {{ cliente.Nombre }}?</p>
-        <button type="submit">Sí, eliminar</button>
-        <button onclick="window.location.href='/clientes'">Cancelar</button>
-    </form>
+  <header>
+    <h1>Eliminar Cliente</h1>
+
+    <!-- ⛔ ANTES: redirección fija -->
+    <!-- <button onclick="window.location.href='/clientes'">Volver a la Lista de Clientes</button> -->
+
+    <!-- ✅ AHORA: redirección dinámica sin errores -->
+    <button onclick="window.location.href='{{ request.args.get('next') or url_for('main.clientes') }}'">
+      Volver a la Lista de Clientes
+    </button>
+  </header>
+
+  <!-- ⛔ ANTES: sin preservar origen -->
+  <!-- <form action="/eliminar_cliente/{{ cliente.ID_Cliente }}" method="POST"> -->
+
+  <!-- ✅ AHORA: incluye `next` en la URL del form -->
+  <form action="{{ url_for('main.eliminar_cliente', id=cliente.ID_Cliente) }}?next={{ request.args.get('next', request.path) }}" method="POST">
+    <p>¿Estás seguro de que deseas eliminar al cliente <strong>{{ cliente.Nombre }}</strong>?</p>
+
+    <button type="submit">Sí, eliminar</button>
+
+    <!-- ⛔ ANTES: redirección fija -->
+    <!-- <button onclick="window.location.href='/clientes'">Cancelar</button> -->
+
+    <!-- ✅ AHORA: redirección dinámica -->
+    <button type="button" onclick="window.location.href='{{ request.args.get('next') or url_for('main.clientes') }}'">
+      Cancelar
+    </button>
+  </form>
+
 </body>
 </html>

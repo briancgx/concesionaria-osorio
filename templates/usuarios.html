@@ -1,63 +1,143 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestión de Usuarios</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/usuarios.css') }}">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gestión de Usuarios</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/usuarios.css') }}">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <div class="container">
-        <div class="header-bar">
-            <div class="title-container">
-                <h1>Gestión de Usuarios</h1>
-            </div>
-        </div>
-
-        <div class="logo-container">
-            <img src="{{ url_for('static', filename='images/logof.jpeg') }}" alt="Logo" class="logo">
-        </div>
-
-        <!-- Botón para agregar un nuevo usuario -->
-        <div class="actions">
-            <button class="btn agregar-btn" onclick="window.location.href='{{ url_for('main.agregar_usuario') }}'">Agregar Usuario</button>
-        </div>
-
-        <!-- Tabla de usuarios -->
-        <table>
-            <thead>
-                <tr>
-                    <th>Nombre</th>
-                    <th>Rol</th>
-                    <th>Fecha de Creación</th>
-                    <th>Último Acceso</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for usuario in usuarios %}
-                    <tr>
-                        <td>{{ usuario.Nombre_usuario }}</td>
-                        <td>{{ usuario.Rol }}</td>
-                        <td>{{ usuario.Fecha_creacion.strftime('%Y-%m-%d %H:%M:%S') }}</td>
-                        <td>{{ usuario.Ultimo_acceso.strftime('%Y-%m-%d %H:%M:%S') }}</td>
-                        <td>
-                            <a href="{{ url_for('main.ver_usuario', id=usuario.ID_Usuario) }}" class="btn ver-btn">Ver</a>
-                            <a href="{{ url_for('main.editar_usuario', id=usuario.ID_Usuario) }}" class="btn editar-btn">Editar</a>
-                            <form action="{{ url_for('main.eliminar_usuario', id=usuario.ID_Usuario) }}" method="POST" style="display:inline;">
-                                <button type="submit" class="btn eliminar-btn" onclick="return confirm('¿Estás seguro de que deseas eliminar este usuario?')">Eliminar</button>
-                            </form>
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-
-        <!-- Botón para volver al panel -->
-        <div class="back-button-container">
-            <button class="btn-volver" onclick="window.location.href='/panel'">Volver al Panel</button>
-        </div>
-
+  <div class="dashboard-container">
+    
+    <!-- Título -->
+    <div class="header-bar">
+      <h1>Gestión de Usuarios</h1>
+      <img src="{{ url_for('static', filename='images/logofp.png') }}" class="logo" alt="Logo">
     </div>
+
+    <!-- Gráficas -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <canvas id="usuariosChart"></canvas>
+        <p><strong>Total de Usuarios:</strong> {{ usuarios|length }}</p>
+      </div>
+      <div class="kpi-card">
+        <canvas id="rolesChart"></canvas>
+        <p><strong>Distribución por Rol</strong></p>
+      </div>
+    </div>
+
+    <!-- Botón para agregar un nuevo usuario -->
+    <div class="actions">
+      <button class="btn agregar-btn" onclick="location.href='{{ url_for('main.agregar_usuario') }}'">Agregar Usuario</button>
+    </div>
+
+    <!-- Tabla de usuarios -->
+    <table>
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Rol</th>
+          <th>Fecha de Creación</th>
+          <th>Último Acceso</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for usuario in usuarios %}
+          <tr>
+            <td>{{ usuario.Nombre_usuario }}</td>
+            <td>{{ usuario.Rol }}</td>
+            <td>{{ usuario.Fecha_creacion.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+            <td>{{ usuario.Ultimo_acceso.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+            <td>
+              <a href="{{ url_for('main.ver_usuario', id=usuario.ID_Usuario) }}" class="btn ver-btn">Ver</a>
+              <a href="{{ url_for('main.editar_usuario', id=usuario.ID_Usuario) }}" class="btn editar-btn">Editar</a>
+              <form action="{{ url_for('main.eliminar_usuario', id=usuario.ID_Usuario) }}" method="POST" style="display:inline;">
+                <button type="submit" class="btn eliminar-btn">Eliminar</button>
+              </form>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <div class="back-button-container">
+      <button class="btn-volver" onclick="location.href='/panel'">Volver al Panel</button>
+    </div>
+  </div>
+
+  <script>
+    const usuarios = {{ usuarios|length }};
+    const rolesData = {{ usuarios_por_rol | tojson }};
+    
+    const roleLabels = Object.keys(rolesData).map(label => 
+      label === 'Asesor Ventas' ? 'Asistente' : label
+    );
+    const roleCounts = Object.values(rolesData);
+
+    new Chart(document.getElementById("usuariosChart"), {
+      type: 'doughnut',
+      data: {
+        labels: ['Usuarios'],
+        datasets: [{
+          data: [usuarios],
+          backgroundColor: ['#3498db']
+        }]
+      },
+      options: {
+        cutout: '70%',
+        plugins: { legend: { display: false } }
+      }
+    });
+
+    new Chart(document.getElementById("rolesChart"), {
+      type: 'bar',
+      data: {
+        labels: roleLabels,
+        datasets: [{
+          label: 'Cantidad',
+          data: roleCounts,
+          backgroundColor: '#1abc9c',
+          barThickness: 45,
+          maxBarThickness: 50,
+          barPercentage: 0.9,
+          categoryPercentage: 0.9
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        plugins: { 
+          legend: { 
+            display: false 
+          }
+        },
+        scales: { 
+          y: { 
+            beginAtZero: true,
+            grid: {
+              color: 'rgba(255, 255, 255, 0.1)'
+            }
+          },
+          x: {
+            grid: {
+              display: false
+            },
+            ticks: {
+              maxRotation: 0,
+              minRotation: 0,
+              autoSkip: false,
+              font: {
+                size: 10
+              },
+              padding: 10
+            }
+          }
+        }
+      }
+    });
+  </script>
 </body>
 </html>

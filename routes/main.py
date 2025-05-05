@@ -1,6 +1,8 @@
 from flask import Blueprint, app, flash, redirect, render_template, request, url_for
+from sqlalchemy import extract
 from models import db, Cliente, Credito, Inventario, Vehiculo, Compra, Pago, Usuario
-from datetime import datetime
+from collections import Counter
+from collections import defaultdict
 
 main_bp = Blueprint('main', __name__)
 
@@ -25,7 +27,24 @@ def panel_control():
     pagos_vencidos = Pago.query.filter(Pago.Fecha_pago < fecha_actual, Pago.Estado == 'debe').all()
     inventarios = Inventario.query.all()
     clientes_pendientes = Cliente.query.join(Credito).filter(Credito.Estado_Crédito == 'Pendiente').all()
-    return render_template('panel_control.html', total_clientes=total_clientes, total_creditos=total_creditos, total_inventario=total_inventario, ventas_del_mes=ventas_del_mes, total_solicitudes_pendientes=total_solicitudes_pendientes,pagos_vencidos=pagos_vencidos, inventarios=inventarios,clientes_pendientes=clientes_pendientes)
+    # 🟢 VENTAS POR MES DINÁMICO (ahora sí JSON-serializable)
+    ventas_query = db.session.query(
+        extract('month', Compra.Fecha_compra).label('mes'),
+        db.func.sum(Compra.Monto).label('total')
+    ).group_by('mes').order_by('mes').all()
+
+    ventas_por_mes = [{'mes': mes, 'total': float(total)} for mes, total in ventas_query]
+
+    # 🟢 CRÉDITOS POR MES DINÁMICO
+    creditos_query = db.session.query(
+        extract('month', Credito.Fecha_otorgamiento).label('mes'),
+        db.func.sum(Credito.Monto_crédito).label('total')
+    ).filter(Credito.Estado_Crédito == 'Aprobado')\
+     .group_by('mes').order_by('mes').all()
+
+    creditos_por_mes = [{'mes': mes, 'total': float(total)} for mes, total in creditos_query]
+
+    return render_template('panel_control.html', total_clientes=total_clientes, total_creditos=total_creditos, total_inventario=total_inventario, ventas_del_mes=ventas_del_mes, total_solicitudes_pendientes=total_solicitudes_pendientes,pagos_vencidos=pagos_vencidos, inventarios=inventarios,clientes_pendientes=clientes_pendientes,ventas_por_mes=ventas_por_mes,creditos_por_mes=creditos_por_mes)
 
 @main_bp.route('/index')
 def index():
@@ -37,28 +56,59 @@ def base():
 
 @main_bp.route('/creditos')
 def creditos():
-    # Obtener todos los créditos desde la base de datos
+    # 👇 ESTA línea es crítica
     creditos = Credito.query.all()
-    
-    # Pasar los créditos al template
-    return render_template('creditos.html', creditos=creditos)
+
+    # Distribución por estado
+    estados = [c.Estado_Crédito for c in creditos]
+    creditos_por_estado = dict(Counter(estados))
+
+    # Suma de montos por cliente
+    creditos_por_cliente = {}
+    for c in creditos:
+        nombre = c.cliente.Nombre
+        creditos_por_cliente[nombre] = creditos_por_cliente.get(nombre, 0) + float(c.Monto_crédito)
+
+    return render_template('creditos.html', creditos=creditos,
+                           creditos_por_estado=creditos_por_estado,
+                           creditos_por_cliente=creditos_por_cliente)
+
+
 
 @main_bp.route('/creditos2')
 def creditos2():
     # Obtener todos los créditos desde la base de datos
     creditos = Credito.query.all()
-    
-    # Pasar los créditos al template
-    return render_template('creditos2.html', creditos=creditos)
+    estados = [c.Estado_Crédito for c in creditos]
+    creditos_por_estado = dict(Counter(estados))
+
+    # Suma de montos por cliente
+    creditos_por_cliente = {}
+    for c in creditos:
+        nombre = c.cliente.Nombre
+        creditos_por_cliente[nombre] = creditos_por_cliente.get(nombre, 0) + float(c.Monto_crédito)
+
+    return render_template('creditos2.html', creditos=creditos,
+                           creditos_por_estado=creditos_por_estado,
+                           creditos_por_cliente=creditos_por_cliente)
 
 @main_bp.route('/creditos3')
 def creditos3():
     # Obtener todos los créditos desde la base de datos
     creditos = Credito.query.all()
     
-    # Pasar los créditos al template
-    return render_template('creditos3.html', creditos=creditos)
+    estados = [c.Estado_Crédito for c in creditos]
+    creditos_por_estado = dict(Counter(estados))
 
+    # Suma de montos por cliente
+    creditos_por_cliente = {}
+    for c in creditos:
+        nombre = c.cliente.Nombre
+        creditos_por_cliente[nombre] = creditos_por_cliente.get(nombre, 0) + float(c.Monto_crédito)
+
+    return render_template('creditos3.html', creditos=creditos,
+                           creditos_por_estado=creditos_por_estado,
+                           creditos_por_cliente=creditos_por_cliente)
 @main_bp.route('/inventario')
 def inventario():
     # Obtener el término de búsqueda del input
@@ -82,7 +132,27 @@ def inventario():
         # Si no hay término de búsqueda, mostrar todos los inventarios
         inventarios = Inventario.query.all()
     
-    return render_template('inventarios.html', inventarios=inventarios)
+    # Lógica para gráficas dinámicas
+    inventarios_por_estado = {}
+    inventarios_por_ubicacion = {}
+
+    for inv in inventarios:
+        # Contar por estado
+        estado = inv.Estado
+        inventarios_por_estado[estado] = inventarios_por_estado.get(estado, 0) + 1
+
+        # Contar por ubicación
+        ubicacion = inv.Ubicación
+        inventarios_por_ubicacion[ubicacion] = inventarios_por_ubicacion.get(ubicacion, 0) + 1
+
+    # Retornar todo a la plantilla
+    return render_template(
+        'inventarios.html',
+        inventarios=inventarios,
+        inventarios_por_estado=inventarios_por_estado,
+        inventarios_por_ubicacion=inventarios_por_ubicacion
+    )
+
 
 @main_bp.route('/inventario2')
 def inventario2():
@@ -90,7 +160,7 @@ def inventario2():
     busqueda = request.args.get('searchInput', '')
     
     if busqueda:
-        # Realizar búsqueda por marca y modelo del vehículo
+        # Realizar búsqueda por nombre completo del vehículo
         inventarios = Inventario.query.join(Vehiculo).filter(
             db.or_(
                 Vehiculo.Marca.ilike(f'%{busqueda}%'),
@@ -107,7 +177,27 @@ def inventario2():
         # Si no hay término de búsqueda, mostrar todos los inventarios
         inventarios = Inventario.query.all()
     
-    return render_template('inventarios2.html', inventarios=inventarios)
+    # Lógica para gráficas dinámicas
+    inventarios_por_estado = {}
+    inventarios_por_ubicacion = {}
+
+    for inv in inventarios:
+        # Contar por estado
+        estado = inv.Estado
+        inventarios_por_estado[estado] = inventarios_por_estado.get(estado, 0) + 1
+
+        # Contar por ubicación
+        ubicacion = inv.Ubicación
+        inventarios_por_ubicacion[ubicacion] = inventarios_por_ubicacion.get(ubicacion, 0) + 1
+
+    # Retornar todo a la plantilla
+    return render_template(
+        'inventarios2.html',
+        inventarios=inventarios,
+        inventarios_por_estado=inventarios_por_estado,
+        inventarios_por_ubicacion=inventarios_por_ubicacion
+    )
+
 
 @main_bp.route('/ver_inventario/<int:id>', methods=['GET'])
 def ver_inventario(id):
@@ -272,9 +362,11 @@ def agregar_credito():
 def usuarios():
     # Obtener todos los usuarios desde la base de datos
     usuarios = Usuario.query.all()
-    
+    roles = defaultdict(int)
+    for u in usuarios:
+        roles[u.Rol] += 1
     # Pasar los usuarios al template
-    return render_template('usuarios.html', usuarios=usuarios)
+    return render_template('usuarios.html', usuarios=usuarios, usuarios_por_rol=roles)
 
 @main_bp.route('/ver_usuario/<int:id>', methods=['GET'])
 def ver_usuario(id):
@@ -346,25 +438,34 @@ def agregar_usuario():
 def clientes():
     # Obtener todos los clientes desde la base de datos
     clientes = Cliente.query.all()
-    
+    estado_data = {}
+    for cliente in clientes:
+        estado = cliente.Estado_cliente
+        estado_data[estado] = estado_data.get(estado, 0) + 1
     # Pasar los clientes al template
-    return render_template('clientes.html', clientes=clientes)
+    return render_template('clientes.html', clientes=clientes, clientes_por_estado=estado_data)
 
 @main_bp.route('/clientes2')
 def clientes2():
     # Obtener todos los clientes desde la base de datos
     clientes = Cliente.query.all()
-    
+    estado_data = {}
+    for cliente in clientes:
+        estado = cliente.Estado_cliente
+        estado_data[estado] = estado_data.get(estado, 0) + 1
     # Pasar los clientes al template
-    return render_template('clientes2.html', clientes=clientes)
+    return render_template('clientes2.html', clientes=clientes, clientes_por_estado=estado_data)
 
 @main_bp.route('/clientes3')
 def clientes3():
     # Obtener todos los clientes desde la base de datos
     clientes = Cliente.query.all()
-    
+    estado_data = {}
+    for cliente in clientes:
+        estado = cliente.Estado_cliente
+        estado_data[estado] = estado_data.get(estado, 0) + 1
     # Pasar los clientes al template
-    return render_template('clientes3.html', clientes=clientes)
+    return render_template('clientes3.html', clientes=clientes, clientes_por_estado=estado_data)
 @main_bp.route('/nuevo_cliente', methods=['GET', 'POST'])
 def nuevo_cliente():
     if request.method == 'POST':
@@ -421,7 +522,8 @@ def eliminar_cliente(id):
     db.session.commit()
     
     flash('Cliente eliminado', 'danger')
-    return redirect(url_for('main.clientes'))
+    next_url = request.args.get('next') or url_for('main.clientes')
+    return redirect(next_url)
 
 @main_bp.route('/agregar_cliente', methods=['GET', 'POST'])
 def agregar_cliente():
@@ -470,9 +572,25 @@ def panel_gerente():
 
     pagos_vencidos = Pago.query.filter(Pago.Fecha_pago < fecha_actual, Pago.Estado == 'debe').all()
     inventarios = Inventario.query.all()
-    clientes_pendientes = Cliente.query.join(Credito).filter(Credito.Estado_Crédito == 'Pendiente').all()
-    return render_template('panel_gerente.html', total_clientes=total_clientes, total_creditos=total_creditos, total_inventario=total_inventario, ventas_del_mes=ventas_del_mes, total_solicitudes_pendientes=total_solicitudes_pendientes,pagos_vencidos=pagos_vencidos, inventarios=inventarios,clientes_pendientes=clientes_pendientes)
-  
+    clientes_pendientes = Cliente.query.join(Credito).filter(Credito.Estado_Crédito == 'Pendiente').all()    # 🟢 VENTAS POR MES DINÁMICO (ahora sí JSON-serializable)
+    ventas_query = db.session.query(
+        extract('month', Compra.Fecha_compra).label('mes'),
+        db.func.sum(Compra.Monto).label('total')
+    ).group_by('mes').order_by('mes').all()
+
+    ventas_por_mes = [{'mes': mes, 'total': float(total)} for mes, total in ventas_query]
+
+    # 🟢 CRÉDITOS POR MES DINÁMICO
+    creditos_query = db.session.query(
+        extract('month', Credito.Fecha_otorgamiento).label('mes'),
+        db.func.sum(Credito.Monto_crédito).label('total')
+    ).filter(Credito.Estado_Crédito == 'Aprobado')\
+     .group_by('mes').order_by('mes').all()
+
+    creditos_por_mes = [{'mes': mes, 'total': float(total)} for mes, total in creditos_query]
+
+    return render_template('panel_gerente.html', total_clientes=total_clientes, total_creditos=total_creditos, total_inventario=total_inventario, ventas_del_mes=ventas_del_mes, total_solicitudes_pendientes=total_solicitudes_pendientes,pagos_vencidos=pagos_vencidos, inventarios=inventarios,clientes_pendientes=clientes_pendientes,ventas_por_mes=ventas_por_mes,creditos_por_mes=creditos_por_mes)
+
 
 @main_bp.route('/panel_asesor')
 def panel_asesor():

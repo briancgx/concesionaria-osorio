@@ -1,74 +1,131 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestión de Créditos</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/creditos.css') }}">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gestión de Créditos</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/creditos.css') }}">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <div class="container">
-        <!-- Barra de encabezado -->
-        <div class="header-bar">
-            <div class="title-container">
-                <h1>Gestión de Créditos</h1>
-            </div>
-            <!-- Logo debajo del título -->
-            
-        </div>
-        <div class="logo-container">
-            <img src="{{ url_for('static', filename='images/logof.jpeg') }}" alt="Logo" class="logo">
-        </div>
-
-        <!-- Botón para agregar crédito -->
-        <div class="button-container">
-            <a href="{{ url_for('main.agregar_credito') }}" class="btn-agregar">Agregar Crédito</a>
-        </div>
-
-        <!-- Tabla de créditos -->
-        <div class="table-container">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Nombre</th>
-                        <th>Monto</th>
-                        <th>Plazo</th>
-                        <th>Estado</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Iterar sobre los créditos -->
-                    {% for credito in creditos %}
-                    <tr>
-                        <td>{{ credito.cliente.Nombre }}</td>
-                        <td>${{ credito.Monto_crédito }}</td>
-                        <td>{{ credito.Fecha_otorgamiento.strftime('%d/%m/%Y') }}</td>
-                        <td>{{ credito.Estado_Crédito }}</td>
-                        <td>
-                            <!-- Botones de acción como botones (no solo texto) -->
-                            <a href="{{ url_for('main.ver_credito', id=credito.ID_Crédito) }}" class="btn-ver">Ver</a>
-                            <a href="{{ url_for('main.editar_credito', id=credito.ID_Crédito) }}" class="btn-editar">Editar</a>
-                            <form action="{{ url_for('main.aprobar_credito', id=credito.ID_Crédito) }}" method="POST" style="display:inline;">
-                                <button type="submit" class="btn-aprobar">Aprobar</button>
-                            </form>
-                            <form action="{{ url_for('main.rechazar_credito', id=credito.ID_Crédito) }}" method="POST" style="display:inline;">
-                                <button type="submit" class="btn-rechazar">Rechazar</button>
-                            </form>
-                            <form action="{{ url_for('main.eliminar_credito', id=credito.ID_Crédito) }}" method="POST" style="display:inline;">
-                                <button type="submit" class="btn-eliminar">Eliminar</button>
-                            </form>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-
-        <!-- Botón para volver al panel -->
-        <div class="back-button-container">
-            <button class="btn-volver" onclick="window.location.href='/panel_asesor'">Volver al Panel</button>
-        </div>
+  <div class="container">
+    <!-- Encabezado -->
+    <div class="header-bar">
+      <h1>Gestión de Créditos</h1>
+      <div class="logo-container">
+        <img src="{{ url_for('static', filename='images/logofp.png') }}" alt="Logo" class="logo">
+      </div>
     </div>
+
+
+    <!-- Botones principales -->
+    <div class="controls">
+      <button class="btn-nuevo" onclick="window.location.href='{{ url_for('main.agregar_credito') }}'">Agregar Crédito</button>
+
+      <button class="btn-volver" onclick="window.location.href='/panel'">Volver al Panel</button>
+    </div>
+
+    <!-- Tabla de Créditos -->
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Monto</th>
+            <th>Fecha</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for credito in creditos %}
+          <tr>
+            <td>{{ credito.cliente.Nombre }}</td>
+            <td>${{ credito.Monto_crédito }}</td>
+            <td>{{ credito.Fecha_otorgamiento.strftime('%d/%m/%Y') }}</td>
+            <td>{{ credito.Estado_Crédito }}</td>
+            <td>
+              <button onclick="window.location.href='{{ url_for('main.ver_credito', id=credito.ID_Crédito) }}'" class="btn-ver">Ver</button>
+              <button onclick="window.location.href='{{ url_for('main.editar_credito', id=credito.ID_Crédito) }}'" class="btn-editar">Editar</button>
+              <form action="{{ url_for('main.aprobar_credito', id=credito.ID_Crédito) }}" method="POST" style="display:inline;">
+                <button type="submit" class="btn-aprobar">Aprobar</button>
+              </form>
+              <form action="{{ url_for('main.rechazar_credito', id=credito.ID_Crédito) }}" method="POST" style="display:inline;">
+                <button type="submit" class="btn-rechazar">Rechazar</button>
+              </form>
+              <form action="{{ url_for('main.eliminar_credito', id=credito.ID_Crédito) }}" method="POST" style="display:inline;">
+                <button type="submit" class="btn-eliminar">Eliminar</button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Sección de gráficas -->
+    <div class="creditos-graphs">
+      <div class="graph-card">
+        <canvas id="estadoCreditoChart"></canvas>
+      </div>
+      <div class="graph-card">
+        <canvas id="montoCreditoChart"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const estadoData = {{ creditos_por_estado | tojson }};
+    const montoData = {{ creditos_por_cliente | tojson }};
+
+    new Chart(document.getElementById("estadoCreditoChart"), {
+      type: 'bar',
+      data: {
+        labels: Object.keys(estadoData),
+        datasets: [{
+          data: Object.values(estadoData),
+          backgroundColor: '#3498db',
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: {
+          y: { beginAtZero: true },
+          x: { ticks: { color: '#333' } }
+        }
+      }
+    });
+
+    new Chart(document.getElementById("montoCreditoChart"), {
+      type: 'doughnut',
+      data: {
+        labels: Object.keys(montoData),
+        datasets: [{
+          data: Object.values(montoData),
+          backgroundColor: ['#2ecc71', '#f1c40f', '#e74c3c', '#9b59b6', '#1abc9c']
+        }]
+      },
+      options: {
+        responsive: true,
+        cutout: '60%',
+        plugins: {
+          legend: {
+            position: 'bottom',
+            labels: {
+              
+              color: '#f1f1f1',
+              boxWidth: 14,
+              padding: 8,
+              font: {
+                size: 13
+              },
+              padding: 25
+            }
+          }
+        }
+      }
+    });
+  </script>
 </body>
 </html>

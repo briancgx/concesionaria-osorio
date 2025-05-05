@@ -1,169 +1,198 @@
-/* Estilo general */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f4f7fa;
+  margin: 0;
+  padding: 0;
+  font-family: 'Poppins', sans-serif;
+  background: #111;
+  color: #f1f1f1;
 }
 
-/* Barra de encabezado */
+.container {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
 .header-bar {
+    text-align: center;
+    background-color: #1e1e1e;
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    background-color: #007BFF; /* Azul claro */
-    color: white;
-    width: 100%; /* Asegura que ocupe todo el ancho del contenedor */
-    padding: 20px;
-    box-sizing: border-box; /* Incluye el padding dentro del ancho total */
-    overflow: hidden; /* Previene que el contenido se desborde */
 }
 
-.title-container {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-}
-
-h1 {
-    margin: 0;
-    font-size: 28px;
-    text-align: center;
-    color: white;
-    width: 100%; /* Asegura que el título ocupe el ancho del contenedor */
-    word-wrap: break-word; /* Evita que el texto se salga si es largo */
-}
-
-/* Logo debajo del título */
-/* Contenedor del logo */
 .logo-container {
-    display: flex;
-    justify-content: center;  /* Centra horizontalmente */
-    align-items: center;      /* Alinea verticalmente (en caso de que haya más contenido en el futuro) */
-    margin-top: 10px;         /* Espacio entre el título y el logo */
+  display: flex;
+  justify-content: center;
+  margin-top: -60px;
 }
 
 .logo {
-    width: 150px;  /* Ajusta el tamaño del logo */
-    height: auto;  /* Mantiene la proporción del logo */
+  width: 160px;
+  height: auto;
 }
 
-
-/* Contenedor principal */
-.container {
-    width: 80%;
-    margin: 20px auto;
-    padding: 20px;
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+.controls {
+  display: flex;
+  justify-content: space-between;
+  margin: 30px 0;
 }
 
-/* Tabla */
+.btn-nuevo, .btn-volver {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 22px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.btn-nuevo:hover, .btn-volver:hover {
+  background-color: #0056b3;
+}
+
+.table-container {
+  background: #1e1e1e;
+  border-radius: 12px;
+  padding: 10px;
+  overflow-x: auto;
+}
+
 table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 20px 0;
+  width: 100%;
+  border-collapse: collapse;
 }
 
 th, td {
-    border: 1px solid #ddd;
-    padding: 10px;
-    text-align: left;
+  padding: 14px;
+  border-bottom: 1px solid #2a2a2a;
+  text-align: left;
 }
 
 th {
-    background-color: #e1f5fe;  /* Azul claro */
-    color: #333;
-    border-bottom: 2px solid #007BFF;
-}
-
-td {
-    background-color: #fff;
+  color: #00bfff;
 }
 
 tr:hover {
-    background-color: #f1f1f1;
+  background-color: #252525;
 }
 
-/* Botones de acción (ver, aprobar, rechazar, editar, eliminar) */
-button {
-    padding: 8px 12px;
-    margin: 5px;
-    cursor: pointer;
-    border: none;
-    border-radius: 5px;
-    font-size: 14px;
+.btn-ver, .btn-editar, .btn-aprobar, .btn-rechazar, .btn-eliminar {
+  padding: 6px 12px;
+  margin: 2px;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  font-size: 13px;
+  cursor: pointer;
+  transition: 0.2s;
 }
 
-/* Colores de botones */
-.btn-ver {
-    background-color: #28a745;
-    color: white;
-    padding: 8px 12px;
-    text-decoration: none;
-    border-radius: 5px;
+.btn-ver { background-color: #2ecc71; }
+.btn-editar { background-color: #f1c40f; color: #000; }
+.btn-aprobar { background-color: #2980b9; }
+.btn-rechazar { background-color: #c0392b; }
+.btn-eliminar { background-color: #e91e63; }
+
+.creditos-graphs {
+  display: flex;
+  justify-content: space-between;
+  gap: 30px;
+  margin-top: 40px;
 }
 
-.btn-editar {
-    background-color: #ffc107;
-    color: white;
-    padding: 8px 12px;
-    text-decoration: none;
-    border-radius: 5px;
+.graph-card {
+  flex: 1;
+  background: #1e1e1e;
+  padding: 20px;
+  border-radius: 12px;
 }
 
-.btn-aprobar {
-    background-color: #007BFF; /* Azul claro */
-    color: white;
+.graph-card canvas {
+  width: 100%;
+  height: 250px;
 }
-
-.btn-rechazar {
-    background-color: #dc3545;
-    color: white;
-}
-
-.btn-eliminar {
-    background-color: #e91e63;
-    color: white;
-}
-
-/* Botón Agregar Crédito */
-.button-container {
+/* Contenedor general de gráficas */
+.creditos-graphs {
     display: flex;
-    justify-content: flex-end;
-    margin-bottom: 20px;
-}
-
-.btn-agregar {
-    padding: 8px 20px;
-    background-color: #007BFF; /* Azul claro */
-    color: white;
-    border-radius: 5px;
+    justify-content: space-between;
+    gap: 20px;
+    margin-top: 40px;
+    flex-wrap: wrap;
+  }
+  
+  /* Tarjeta de gráfica */
+  .graph-card {
+    background-color: #1e1e1e;
+    padding: 20px;
+    border-radius: 12px;
+    flex: 1 1 48%;
+    max-width: 48%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  /* Canvas */
+  .graph-card canvas {
+    width: 100% !important;
+    height: auto !important;
+    aspect-ratio: 1.2 / 1;
+    max-height: 300px;
+  }
+  
+  /* Etiquetas */
+  .graph-card p {
+    text-align: center;
+    color: #f1f1f1;
+    margin-top: 10px;
     font-size: 14px;
-    cursor: pointer;
-    border: none;
-    margin-top: 20px; /* Añadido margen superior */
-    text-decoration: none;  /* Elimina el subrayado */
-}
+  }
+  
+  /* Responsive para móviles */
+  @media (max-width: 768px) {
+    .graph-card {
+      max-width: 100%;
+      flex: 1 1 100%;
+    }
+  }
+  /* Limitar el alto del contenedor para evitar que se desborde el legend */
+.graph-card canvas {
+    width: 100% !important;
+    aspect-ratio: 1.2 / 1;
+    max-height: 250px;
+    margin-bottom: 10px;
+  }
+  
+  /* Ajustar el legend para que no empalme */
+  .chart-legend {
+    max-height: 50px;
+    overflow-y: auto;
+    font-size: 13px;
+    color: #f1f1f1;
+    text-align: center;
+  }
+  .table-container table td:last-child {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;       /* permite que se vayan a otra línea */
+    gap: 8px 12px;          /* espacio entre filas y columnas */
+    padding: 10px;
+    text-align: center;
+  }
+  
+  .table-container table th:last-child {
+    text-align: center;
+  }
+  
 
-.btn-agregar:hover {
-    background-color: #0056b3;
-}
-
-/* Botón Volver al Panel */
-.btn-volver {
-    padding: 8px 20px;
-    background-color: #e1f5fe;  /* Azul claro */
-    color: #333;
-    border-radius: 5px;
-    font-size: 14px;
-    cursor: pointer;
-    border: none;
-    margin-right: 20px;
-}
-
-.btn-volver:hover {
-    background-color: #b3e5fc;
+.table-container table th:last-child {
+    text-align: center; /* Centra el texto en el encabezado de la última columna */
 }
