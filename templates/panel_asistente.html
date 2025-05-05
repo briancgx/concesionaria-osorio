@@ -1,14 +1,151 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel de Control</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/panel_control.css') }}">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Panel de Control</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/panel_control.css') }}">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-   
-    <h2>No tienes autorizado entrar xd</h2>
-  
+  <div class="dashboard-container">
+    <h2>Visión General</h2>
+    <div class="kpi-grid">
+      <!-- Clientes -->
+      <div class="kpi-card">
+        <canvas id="clientesChart"></canvas>
+        <p><strong>Clientes Activos:</strong> {{ total_clientes }}</p>
+      </div>
+      <!-- Créditos -->
+      <div class="kpi-card">
+        <canvas id="creditosChart"></canvas>
+        <p><strong>Créditos Aprobados:</strong> ${{ total_creditos }}</p>
+      </div>
+      <!-- Inventario -->
+      <div class="kpi-card">
+        <canvas id="inventarioChart"></canvas>
+        <p><strong>Inventario Disponible:</strong> {{ total_inventario }} unidades</p>
+      </div>
+      <!-- Ventas -->
+      <div class="kpi-card">
+        <canvas id="ventasChart"></canvas>
+        <p><strong>Ventas del Mes:</strong> ${{ ventas_del_mes }}</p>
+      </div>
+    </div>
+
+    <!-- Alertas -->
+    <div class="alerts-section">
+      <h2>Alertas y Notificaciones</h2>
+      <ul>
+        {% for pago in pagos_vencidos %}
+          <li class="alert alert-danger">Pago vencido - Cliente #{{ pago.credito.ID_Cliente }}</li>
+        {% endfor %}
+        <li class="alert alert-info">Solicitudes de crédito pendientes: {{ total_solicitudes_pendientes }}</li>
+        {% for inventario in inventarios %}
+          {% if inventario.Estado == 'No Disponible' %}
+            <li class="alert alert-danger">Auto {{ inventario.ID_Vehículo }} fuera de inventario</li>
+          {% endif %}
+        {% endfor %}
+        {% for cliente in clientes_pendientes %}
+          <li class="alert alert-warning">{{ cliente.Nombre }} con solicitud pendiente</li>
+        {% else %}
+          <li class="alert alert-success">No hay solicitudes pendientes</li>
+        {% endfor %}
+      </ul>
+    </div>
+
+
+    <!-- Accesos rápidos -->
+    <div class="quick-access">
+      <h2>Accesos Rápidos</h2>
+      <div class="button-container">
+        <button onclick="location.href='/reportes'">Reportes</button>
+        <button onclick="location.href='/pagos'">Pagos</button>
+        <button onclick="location.href='/usuarios'">Usuarios</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    
+    const total_clientes   = {{ total_clientes | tojson }};
+    const total_creditos   = {{ total_creditos | tojson }};
+    const total_inventario = {{ total_inventario | tojson }};
+    const ventas_del_mes   = {{ ventas_del_mes | tojson }};
+    const ventasData       = {{ ventas_por_mes | tojson }};
+    const creditosData     = {{ creditos_por_mes | tojson }};
+    
+    const meses = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+
+    const ventasLabels = ventasData.map(item => meses[item.mes - 1]);
+    const ventasValores = ventasData.map(item => item.total);
+    const creditosLabels = creditosData.map(item => meses[item.mes - 1]);
+    const creditosValores = creditosData.map(item => item.total);
+
+    new Chart(document.getElementById("clientesChart"), {
+      type: 'doughnut',
+      data: {
+        labels: ['Activos', 'Inactivos'],
+        datasets: [{
+          data: [total_clientes, 10],
+          backgroundColor: ['#3498db', '#ecf0f1'],
+        }]
+      },
+      options: { cutout: '70%', plugins: { legend: { position: 'bottom' } } }
+    });
+
+    new Chart(document.getElementById("creditosChart"), {
+      type: 'line',
+      data: {
+        labels: creditosLabels,
+        datasets: [{
+          label: 'Créditos ($)',
+          data: creditosValores,
+          borderColor: '#1abc9c',
+          fill: true,
+          tension: 0.4
+        }]
+      },
+      options: {
+        plugins: { legend: { display: false } },
+        scales: { y: { beginAtZero: true } }
+      }
+    });
+
+    new Chart(document.getElementById("inventarioChart"), {
+      type: 'bar',
+      data: {
+        labels: ['Disponible', 'No Disponible'],
+        datasets: [{
+          data: [total_inventario, 10],
+          backgroundColor: ['#f1c40f', '#e67e22']
+        }]
+      },
+      options: {
+        indexAxis: 'y',
+        plugins: { legend: { display: false } },
+        scales: { x: { beginAtZero: true } }
+      }
+    });
+
+    new Chart(document.getElementById("ventasChart"), {
+      type: 'line',
+      data: {
+        labels: ventasLabels,
+        datasets: [{
+          label: 'Ventas ($)',
+          data: ventasValores,
+          borderColor: '#e74c3c',
+          backgroundColor: 'rgba(231,76,60,0.2)',
+          fill: true,
+          tension: 0.4
+        }]
+      },
+      options: {
+        plugins: { legend: { display: false } },
+        scales: { y: { beginAtZero: true } }
+      }
+    });
+  </script>
 </body>
 </html>

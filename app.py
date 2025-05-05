@@ -26,6 +26,7 @@ def login():
         nombre_usuario = request.form['username']
         contrasena = request.form['password']
         
+        
         usuario = Usuario.query.filter_by(Nombre_usuario=nombre_usuario).first()
         
         if usuario and usuario.Contraseña == contrasena:

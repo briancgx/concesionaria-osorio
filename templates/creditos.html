@@ -22,7 +22,7 @@
     <div class="controls">
       <button class="btn-nuevo" onclick="window.location.href='{{ url_for('main.agregar_credito') }}'">Agregar Crédito</button>
 
-      <button class="btn-volver" onclick="window.location.href='/panel'">Volver al Panel</button>
+      <button class="btn-volver" onclick="window.location.href='{{ session.get('panel_origen') }}'">Volver al Panel</button>
     </div>
 
     <!-- Tabla de Créditos -->

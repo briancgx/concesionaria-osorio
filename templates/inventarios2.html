@@ -86,7 +86,7 @@
         </div>
     </div>
     <div class="action-buttons-container">
-        <button class="btn-volver" onclick="window.location.href='/panel'">Volver al Panel</button>
+        <button class="btn-volver" onclick="window.location.href='{{ session.get('panel_origen') }}'">Volver al Panel</button>
         <button class="btn add" onclick="window.location.href='{{ url_for('main.agregar_inventario') }}'">Agregar Inventario</button>
     </div>
 

@@ -67,7 +67,7 @@
     <!-- Botones de control -->
     <div class="controls">
         <button class="btn-nuevo" onclick="window.location.href='/nuevo_cliente'">Agregar Cliente</button>
-        <button class="btn-volver" onclick="window.location.href='/panel_asesor'">Volver al Panel</button>
+        <button class="btn-volver" onclick="window.location.href='{{ session.get('panel_origen') }}'">Volver al Panel</button>
       </div>
   
   <script>
