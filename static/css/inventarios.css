@@ -110,10 +110,11 @@ tr:hover {
 
 .action-buttons-container {
     display: flex;
-    justify-content: space-between;
-    margin-top: 30px;
+    justify-content: center; /* Centra los botones */
+    gap: 980px; /* Espacio entre los botones */
+    margin-top: 20px;
+    margin-bottom: 30px;
 }
-
 .add, .btn-volver {
     padding: 10px 20px;
     border-radius: 8px;
@@ -153,4 +154,13 @@ tr:hover {
     aspect-ratio: 1.2 / 1;
     max-height: 300px;
     margin-bottom: 10px;
+}
+th {
+    background-color: #222;
+    color: #00bfff;
+    text-align: left; /* Alinea todos los títulos a la izquierda */
+}
+
+th:last-child {
+    text-align: center; /* Centra solo el título "Acciones" */
 }

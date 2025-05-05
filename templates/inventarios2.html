@@ -74,11 +74,7 @@
         </table>
 
         <!-- Botones -->
-        <div class="action-buttons-container">
-            <button class="btn-volver" onclick="window.location.href='/panel'">Volver al Panel</button>
-            <button class="btn add" onclick="window.location.href='{{ url_for('main.agregar_inventario') }}'">Agregar Inventario</button>
-        </div>
-
+     
         <!-- Gráficas -->
         <div class="inventario-graphs">
             <div class="graph-card">
@@ -89,6 +85,11 @@
             </div>
         </div>
     </div>
+    <div class="action-buttons-container">
+        <button class="btn-volver" onclick="window.location.href='/panel'">Volver al Panel</button>
+        <button class="btn add" onclick="window.location.href='{{ url_for('main.agregar_inventario') }}'">Agregar Inventario</button>
+    </div>
+
 
     <script>
         const estadoData = {{ inventarios_por_estado | tojson }};
