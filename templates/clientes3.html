@@ -1,64 +1,126 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestión de Clientes</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/clientes.css') }}">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gestión de Clientes</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/clientes.css') }}">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <!-- Contenedor principal -->
-    <section class="clientes-container">
-        <div class="header-bar">
-            <div class="title-container">
-                <h1>Gestión de Clientes</h1>
-            </div>
-            <!-- Logo debajo del título -->
-            
-        </div>
-        <div class="logo-container">
-            <img src="{{ url_for('static', filename='images/logof.jpeg') }}" alt="Logo" class="logo">
-        </div>
+  <div class="clientes-container">
+    <!-- Header -->
+    <div class="header-bar">
+      <h1>Gestión de Clientes</h1>
+      <img src="{{ url_for('static', filename='images/logofp.png') }}" alt="Logo" class="logo">
+    </div>
 
-        <!-- Sección de tabla de clientes -->
-        <div class="clientes-header">
-            <h2>Lista de Clientes</h2>
-            <button onclick="window.location.href='/nuevo_cliente'" class="btn-nuevo">Agregar Nuevo Cliente</button>
-        </div>
 
-        <!-- Tabla de Clientes -->
-        <table class="clientes-table">
+    <!-- Contenido principal -->
+    <div class="main-content">
+      <!-- Tabla de clientes -->
+      <div class="clientes-table">
+        <div class="table-wrapper">
+          <table>
             <thead>
-                <tr>
-                    <th>Nombre</th>
-                    <th>Email</th>
-                    <th>Teléfono</th>
-                    <th>Estado</th>
-                    <th>Acciones</th>
-                </tr>
+              <tr>
+                <th>Nombre</th>
+                <th>Email</th>
+                <th>Teléfono</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+              </tr>
             </thead>
             <tbody>
-                {% for cliente in clientes %}
-                <tr>
-                    <td>{{ cliente.Nombre }}</td>
-                    <td>{{ cliente.Correo_electrónico }}</td>
-                    <td>{{ cliente.Teléfono }}</td>
-                    <td>{{ cliente.Estado_cliente }}</td>
-                    <td>
-                        <button class="btn-editar" onclick="window.location.href='/editar_cliente/{{ cliente.ID_Cliente }}'">Editar</button>
-                        <form action="/eliminar_cliente/{{ cliente.ID_Cliente }}" method="POST" style="display:inline;">
-                            <button class="btn-eliminar" type="submit">Eliminar</button>
-                        </form>
-                    </td>
-                </tr>
-                {% endfor %}
+              {% for cliente in clientes %}
+              <tr>
+                <td>{{ cliente.Nombre }}</td>
+                <td>{{ cliente.Correo_electrónico }}</td>
+                <td>{{ cliente.Teléfono }}</td>
+                <td>{{ cliente.Estado_cliente }}</td>
+                <td>
+                  <button class="btn-editar" onclick="window.location.href='/editar_cliente/{{ cliente.ID_Cliente }}'">Editar</button>
+                  <form action="{{ url_for('main.eliminar_cliente', id=cliente.ID_Cliente) }}?next={{ request.path }}" method="POST" style="display:inline;">
+                    <button class="btn-eliminar" type="submit">Eliminar</button>
+                  </form>                  
+                </td>
+              </tr>
+              {% endfor %}
             </tbody>
-        </table>
-
-        <!-- Botón Volver al Panel -->
-        <div class="back-button-container">
-            <button class="btn-volver" onclick="window.location.href='/panel_asesor'">Volver al Panel</button>
+          </table>
         </div>
-    </section>
+      </div>
+
+      <!-- Gráficas -->
+      <div class="clientes-graphs">
+        <div class="kpi-card">
+          <canvas id="clientesChart"></canvas>
+          <p>Total de Clientes: {{ clientes|length }}</p>
+        </div>
+        <div class="kpi-card">
+          <canvas id="estadoChart"></canvas>
+          <p>Distribución por Estado</p>
+        </div>
+      </div>
+    </div>
+  </div>
+    <!-- Botones de control -->
+    <div class="controls">
+        <button class="btn-nuevo" onclick="window.location.href='/nuevo_cliente'">Agregar Cliente</button>
+        <button class="btn-volver" onclick="window.location.href='/panel_asesor'">Volver al Panel</button>
+      </div>
+  
+  <script>
+    const totalClientes = {{ clientes|length }};
+    const estadoData = {{ clientes_por_estado | tojson }};
+
+    new Chart(document.getElementById("clientesChart"), {
+      type: 'doughnut',
+      data: {
+        labels: ['Total'],
+        datasets: [{
+          data: [totalClientes],
+          backgroundColor: ['#3498db']
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: '70%',
+        plugins: {
+          legend: { display: false }
+        }
+      }
+    });
+
+    new Chart(document.getElementById("estadoChart"), {
+      type: 'bar',
+      data: {
+        labels: Object.keys(estadoData),
+        datasets: [{
+          data: Object.values(estadoData),
+          backgroundColor: '#2ecc71'
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            grid: { color: '#333' },
+            ticks: { color: '#fff' }
+          },
+          x: {
+            grid: { display: false },
+            ticks: { color: '#fff' }
+          }
+        }
+      }
+    });
+  </script>
 </body>
 </html>

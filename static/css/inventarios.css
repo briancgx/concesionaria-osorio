@@ -1,210 +1,156 @@
-/* Estilos generales */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f7fa;
+    font-family: 'Poppins', sans-serif;
     margin: 0;
     padding: 0;
+    background-color: #111;
+    color: #f1f1f1;
+}
+
+.container {
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 20px;
 }
 
 .header-bar {
+    text-align: center;
+    background-color: #1e1e1e;
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 20px;
     display: flex;
-    flex-direction: column;         /* Coloca los elementos en columna (título arriba, logo abajo) */
-    align-items: center;            /* Centra los elementos horizontalmente */
-    justify-content: center;        /* Centra los elementos verticalmente */
-    background-color: #007BFF;      /* Azul claro */
-    color: white;
-    
-    font-size: 20px;
-    font-weight: bold;
-    width: 100%;                    /* Hace que el contenedor ocupe todo el ancho */
+    flex-direction: column;
+    align-items: center;
 }
 
-.title-container, .logo-container {
+.logo-container {
     display: flex;
-    justify-content: center;        /* Centra los elementos horizontalmente */
-    width: 100%;                    /* Asegura que ambos contenedores ocupen todo el ancho */
-}
-
-h1 {
-    margin: 0;                      /* Elimina el margen por defecto para mantener la alineación */
-    font-size: 28px;                 /* Ajusta el tamaño del título */
+    justify-content: center;
+    margin-top: -60px;
 }
 
 .logo {
-    width: 150px;                   /* Tamaño del logo, aproximadamente tres veces más grande */
-    height: auto;                   /* Mantiene la proporción del logo */
-    margin-top: 10px;                /* Espacio entre el título y el logo */
+    width: 150px;
+    height: auto;
 }
 
-
-.container {
-    width: 80%;
-    margin: 20px auto;
-    padding: 20px;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-h1 {
-    background-color: #007BFF;  /* Azul claro */
-    color: white;  /* Texto blanco */
-    text-align: center;
-    padding: 10px;
-    margin-bottom: 20px;
-}
-
-
-/* Estilos para la barra de búsqueda */
 .search-bar {
-    width: 100%;
-    padding: 15px 0;  /* Solo padding vertical */
-    margin-bottom: 20px;
+    margin: 20px 0;
 }
 
 .search-form {
     display: flex;
-    width: 100%;
     gap: 10px;
 }
 
 .search-input {
     flex: 1;
     padding: 10px;
-    border: 1px solid #ced4da;
-    border-radius: 4px;
-    font-size: 16px;
-    background-color: white;
+    border-radius: 5px;
+    border: none;
 }
 
 .search-button {
-    padding: 10px 20px;
-    background-color: #0d6efd;
+    background-color: #007bff;
     color: white;
     border: none;
-    border-radius: 4px;
+    border-radius: 5px;
+    padding: 10px 16px;
     cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.2s;
 }
 
-.search-button:hover {
-    background-color: #0b5ed7;
-}
-
-/* Estilos de la tabla */
 table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
+    background-color: #1e1e1e;
+    border-radius: 10px;
+    overflow: hidden;
 }
 
 th, td {
-    padding: 12px;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
+    padding: 14px;
+    border-bottom: 1px solid #333;
 }
 
 th {
-    background-color: #e1f5fe;  /* Azul claro */
-    color: #333;  /* Color de texto oscuro para contraste */
-    border-bottom: 2px solid #007BFF; /* Borde más fuerte en los encabezados */
+    background-color: #222;
+    color: #00bfff;
+    text-align: center;
 }
 
 td {
-    border-bottom: 1px solid #ddd; /* Borde más suave para las celdas */
+    color: white;
 }
-
 
 tr:hover {
-    background-color: #f1f1f1;
+    background-color: #2a2a2a;
 }
 
-/* Estilos de los botones de acción */
-.btn {
-    padding: 8px 12px;
-    font-size: 14px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-right: 8px;
-}
-
-.view {
-    background-color: #28a745;
-    color: white;
-    text-decoration: none;
-}
-
-.view:hover {
-    background-color: #218838;
-}
-
-.edit {
-    background-color: #ffc107;
-    color: white;
-    text-decoration: none;
-}
-
-.edit:hover {
-    background-color: #e0a800;
-}
-
-.delete {
-    background-color: #dc3545;
-    color: white;
-}
-
-.delete:hover {
-    background-color: #c82333;
-}
-
-/* Botón para agregar inventario */
-.action-buttons {
+.acciones {
     display: flex;
-    justify-content: flex-end;
-    margin-top: 20px;
+    justify-content: center;
+    gap: 10px;
 }
 
-.add {
-    background-color: #007BFF;
-    color: white;
-    padding: 10px 20px;
-    border-radius: 4px;
-    font-size: 16px;
-    cursor: pointer;
-}
-
-.add:hover {
-    background-color: #0056b3;
-}
-
-/* Estilo del botón Volver al Panel*/
-.btn-volver {
-    padding: 8px 20px;
-    background-color: #e1f5fe;  /* Azul claro */
-    color: #333;  /* Texto oscuro */
+.btn {
+    padding: 6px 12px;
+    border: none;
     border-radius: 5px;
     font-size: 14px;
+    color: white;
     cursor: pointer;
-    border: none;
 }
 
-.btn-volver:hover {
-    background-color: #b3e5fc;  /* Un azul un poco más oscuro al pasar el mouse */
-}
+.view { background-color: #2ecc71; }
+.edit { background-color: #f1c40f; color: black; }
+.delete { background-color: #e91e63; }
 
 .action-buttons-container {
     display: flex;
-    justify-content: space-between;  /* Espacio entre los botones */
-    margin-top: 20px;
+    justify-content: space-between;
+    margin-top: 30px;
 }
 
-.btn-volver, .add {
+.add, .btn-volver {
     padding: 10px 20px;
-    font-size: 16px;
-    border-radius: 4px;
-    cursor: pointer;
+    border-radius: 8px;
+    background-color: #007bff;
+    color: white;
     border: none;
+    font-weight: bold;
+    font-size: 15px;
+    cursor: pointer;
 }
 
+.add:hover, .btn-volver:hover {
+    background-color: #0056b3;
+}
+
+/* Gráficas */
+.inventario-graphs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    margin-top: 40px;
+}
+
+.graph-card {
+    flex: 1 1 48%;
+    background: #1e1e1e;
+    border-radius: 12px;
+    padding: 20px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.graph-card canvas {
+    width: 100% !important;
+    aspect-ratio: 1.2 / 1;
+    max-height: 300px;
+    margin-bottom: 10px;
+}

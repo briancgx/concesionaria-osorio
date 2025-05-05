@@ -1,160 +1,236 @@
-/* Estilos generales */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f4f4f4;
+  margin: 0;
+  padding: 0;
+  background: #111;
+  font-family: 'Poppins', sans-serif;
+  color: #f1f1f1;
+}
+
+.clientes-container {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 20px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Encabezado */
-header {
-    color: black;
-    padding: 15px;
-    text-align: center;
-}
-
-header h1 {
-    margin: 0;
-}
-
-/* Barra de navegación */
-nav {
-    margin-top: 20px;
-    text-align: center;
-}
-
-/* Contenedor principal de clientes */
-.clientes-container {
-    width: 80%;
-    margin: 20px auto;
-    padding: 20px;
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-/* Barra de encabezado dentro del contenedor */
 .header-bar {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background-color: #007BFF; /* Azul claro */
-    color: white;
-    width: 100%;
-    padding: 20px;
-    box-sizing: border-box;
+  text-align: center;
+  background-color: #1e1e1e;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.title-container {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-}
-
-h1 {
-    margin: 0;
-    font-size: 28px;
-    text-align: center;
-    color: white;
-    width: 100%;
-    word-wrap: break-word;
-}
-
-/* Logo debajo del título */
-.logo-container {
-    display: flex;
-    justify-content: center;
-    margin-top: 10px;
+.header-bar h1 {
+  font-size: 2.5em;
+  margin-bottom: 15px;
+  color: white;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .logo {
     width: 150px;
     height: auto;
+    margin-top: -60px;
+    display: block;
 }
 
-/* Encabezado de la tabla */
-.clientes-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
+/* Layout principal */
+.main-content {
+  display: grid;
+  grid-template-columns: 1fr 350px;
+  gap: 30px;
+  flex: 1;
 }
 
-.clientes-header h2 {
-    margin: 0;
+/* Contenedor de tabla */
+.clientes-table {
+  background: #1e1e1e;
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  max-height: 780px;
 }
 
-/* Botón Agregar Cliente */
-.btn-nuevo {
-    background-color: #007BFF; /* Azul claro */
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
+.table-wrapper {
+  overflow-y: auto;
 }
 
-/* Estilos de la tabla */
+.table-wrapper::-webkit-scrollbar {
+  width: 8px;
+  background-color: #1e1e1e;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb {
+  background-color: #333;
+  border-radius: 4px;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb:hover {
+  background-color: #444;
+}
+
+/* Tabla */
 table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
+  width: 100%;
+  border-collapse: collapse;
 }
 
-th, td {
-    border: 1px solid #ddd;
-    padding: 12px;
-    text-align: left;
+thead {
+  position: sticky;
+  top: 0;
+  background-color: #1e1e1e;
+  z-index: 1;
 }
 
 th {
-    background-color: #e1f5fe;  /* Azul claro */
+  color: #00bfff;
+  font-weight: 600;
+  text-align: left;
+  padding: 16px;
+  background-color: #1e1e1e;
+  border-bottom: 2px solid #333;
 }
 
 td {
-    background-color: #fff;
+  padding: 14px 16px;
+  border-bottom: 1px solid #2a2a2a;
 }
 
-/* Botones de acción */
-button {
-    padding: 8px 12px;
-    margin: 5px;
-    cursor: pointer;
-    border: none;
-    border-radius: 5px;
-    font-size: 14px;
+th:last-child,
+td:last-child {
+  text-align: center;
+  white-space: nowrap;
 }
 
-/* Colores de botones */
+tr:hover {
+  background-color: #252525;
+}
+
+/* Gráficas */
+.clientes-graphs {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  height: fit-content;
+}
+
+.kpi-card {
+  background: #1e1e1e;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.kpi-card canvas {
+  width: 100% !important;
+  height: auto !important;
+  aspect-ratio: 1;
+  margin-bottom: 10px;
+}
+
+.kpi-card p {
+  text-align: center;
+  margin: 10px 0 0;
+  color: #fff;
+  font-size: 14px;
+}
+
+/* Botones de acción en la tabla */
+.btn-editar,
+.btn-eliminar {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 13px;
+  margin: 0 4px;
+}
+
 .btn-editar {
-    background-color: #ffc107; /* Azul claro */
-    color: white;
+  background-color: #ffc107;
+  color: #000;
+}
+
+.btn-editar:hover {
+  background-color: #e0a800;
 }
 
 .btn-eliminar {
-    background-color: #e91e63;
-    color: white;
+  background-color: #e91e63;
+  color: white;
 }
 
-/* Efecto hover en los botones */
-button:hover {
-    opacity: 0.8;
+.btn-eliminar:hover {
+  background-color: #c2185b;
 }
 
-/* Botón Volver al Panel */
+/* Botones finales bien colocados */
+.clientes-actions {
+  margin-top: 40px;
+  width: 100%;
+  max-width: 1300px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  box-sizing: border-box;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.btn-nuevo,
 .btn-volver {
-    padding: 8px 20px;
-    background-color: #e1f5fe; /* Azul claro */
-    color: #333;
-    border-radius: 5px;
-    font-size: 14px;
-    cursor: pointer;
-    border: none;
-    text-decoration: none;
-    margin-top: 20px; /* Añadido espacio superior */
+  background-color: #007bff;
+  color: white;
+  padding: 10px 22px;
+  font-weight: 600;
+  font-size: 14px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease;
 }
 
+.btn-nuevo:hover,
 .btn-volver:hover {
-    background-color: #b3e5fc;
+  background-color: #0056b3;
 }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .main-content {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .clientes-actions {
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px;
+    align-items: stretch;
+  }
+}
+
+.controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1350px;
+    width: 100%;
+    margin: 0px auto 40px auto;
+    padding: 0 20px;
+    box-sizing: border-box;
+  }
+  

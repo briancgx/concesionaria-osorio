@@ -1,106 +1,126 @@
-/* Reseteo de márgenes y paddings */
+/* Fuente moderna */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+/* Reset */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-/* Estilo general del body */
+/* Body con gradiente elegante */
 body {
-    font-family: 'Arial', sans-serif;
-    background: white;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(155deg, #000000, #11252d);
     height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
     margin: 0;
 }
-.login-form {
-    text-align: center;
-}
 
-/* Estilo para la imagen del logo, haciendo que sea circular */
-.login-logo {
-    width: 100px;  /* Tamaño de la imagen */
-    height: 100px; /* Tamaño de la imagen */
-    border-radius: 50%; /* Hace que la imagen sea un círculo */
-    margin-bottom: 20px; /* Espacio debajo de la imagen */
-    object-fit: cover; /* Asegura que la imagen no se deforme */
-}
-
-
-/* Contenedor principal del formulario */
+/* Contenedor principal */
 .login-container {
-    width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
-}
-
-/* Caja del formulario */
-.login-form {
-    background-color: white;
-    padding: 40px;
-    border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
     width: 100%;
+}
+
+/* Formulario con animación */
+.login-form {
+    background: white;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow:
+    0 0 25px 4px white,  /* glow visible azul */
+    0 8px 25px rgba(0, 0, 0, 0.3);      /* sombra suave normal */
     max-width: 400px;
+    width: 100%;
     text-align: center;
+    transition: all 0.3s ease;
+    animation: fadeIn 0.8s ease-in-out;
 }
 
-/* Estilo del título */
+
+/* Logo circular con glow */
+.login-logo {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-bottom: 20px;
+    background: rgb(0, 0, 0);
+    padding: 10px;
+    box-shadow: 0 0 8px rgba(0, 114, 255, 0.4);
+}
+
+/* Animación suave */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Título */
 .login-form h2 {
-    margin-bottom: 20px;
     font-size: 24px;
-    color: #333;
+    color: #003366;
+    margin-bottom: 25px;
+    font-weight: 600;
 }
 
-/* Grupo de inputs */
+/* Inputs */
 .input-group {
-    margin-bottom: 20px;
     text-align: left;
+    margin-bottom: 20px;
 }
 
-/* Etiqueta de los inputs */
 .input-group label {
     display: block;
     font-size: 14px;
-    margin-bottom: 5px;
-    color: #666;
+    color: #444;
+    margin-bottom: 6px;
 }
 
-/* Estilo de los inputs */
 .input-group input {
     width: 100%;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 16px;
+    padding: 12px 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 15px;
+    transition: border-color 0.3s;
 }
 
-/* Estilo del botón */
+.input-group input:focus {
+    border-color: #007acc;
+    outline: none;
+}
+
+/* Botón con sombra */
 .btn-login {
-    background-color: #0072ff;
+    background: linear-gradient(to right, #007acc, #00bfff);
     color: white;
     padding: 12px 0;
-    border: none;
-    border-radius: 5px;
-    font-size: 16px;
     width: 100%;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: background 0.3s;
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
 }
 
 .btn-login:hover {
-    background-color: #005bb5;
+    background: linear-gradient(to right, #005fa3, #00a3cc);
 }
 
-/* Enlace de "Olvidaste tu contraseña" */
+/* Enlace */
 .forgot-password {
     display: inline-block;
     margin-top: 15px;
     font-size: 14px;
-    color: #0072ff;
+    color: #007acc;
     text-decoration: none;
 }
 

@@ -5,32 +5,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestión de Inventario</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/inventarios.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-
     <div class="container">
+        <!-- Encabezado -->
         <div class="header-bar">
             <div class="title-container">
                 <h1>Gestión de Inventario</h1>
+                        <!-- Logo -->
+                <div class="logo-container">
+                    <img src="{{ url_for('static', filename='images/logofp.png') }}" alt="Logo" class="logo">
+                </div>
+
             </div>
         </div>
-        <div class="logo-container">
-            <img src="{{ url_for('static', filename='images/logof.jpeg') }}" alt="Logo" class="logo">
-        </div>
-        
-        <!-- Sección de filtros -->
+
+
+        <!-- Filtro de búsqueda -->
         <div class="search-bar">
             <form method="GET" action="{{ url_for('main.inventario') }}" class="search-form">
-                <input type="text" 
-                       name="searchInput" 
-                       placeholder="Buscar por nombre del vehículo..." 
-                       value="{{ request.args.get('searchInput', '') }}"
-                       class="search-input">
+                <input type="text" name="searchInput" placeholder="Buscar por nombre del vehículo..." value="{{ request.args.get('searchInput', '') }}" class="search-input">
                 <button type="submit" class="search-button">Filtrar</button>
             </form>
         </div>
-        
-        <!-- Agregar mensaje cuando no hay resultados -->
+
+        <!-- Mensaje si no hay resultados -->
         {% if inventarios|length == 0 %}
             <div class="alert alert-info" role="alert">
                 {% if request.args.get('searchInput') %}
@@ -41,7 +41,7 @@
             </div>
         {% endif %}
 
-        <!-- Tabla de Inventario -->
+        <!-- Tabla -->
         <table>
             <thead>
                 <tr>
@@ -53,33 +53,82 @@
             </thead>
             <tbody>
                 {% for inventario in inventarios %}
-                    <tr>
-                        <td>{{ inventario.vehiculo.Marca }} {{ inventario.vehiculo.Modelo }} ({{ inventario.vehiculo.Año }})</td>
-                        <td>{{ inventario.Ubicación }}</td>
-                        <td>{{ inventario.Estado }}</td>
-                        <td>
-                            <!-- Redirige al detalle del inventario -->
-                            <a href="{{ url_for('main.ver_inventario', id=inventario.ID_Inventario) }}" class="btn view">Ver</a>
-
-                            <!-- Redirige al formulario de edición del inventario -->
-                            <a href="{{ url_for('main.editar_inventario', id=inventario.ID_Inventario) }}" class="btn edit">Editar</a>
-
-                            <!-- Formulario para eliminar el inventario -->
-                            <form action="{{ url_for('main.eliminar_inventario', id=inventario.ID_Inventario) }}" method="POST" style="display:inline;">
-                                <button type="submit" class="btn delete" onclick="return confirm('¿Estás seguro de que deseas eliminar este inventario?')">Eliminar</button>
-                            </form>
-                        </td>
-                    </tr>
+                <tr>
+                    <td>{{ inventario.vehiculo.Marca }} {{ inventario.vehiculo.Modelo }} ({{ inventario.vehiculo.Año }})</td>
+                    <td>{{ inventario.Ubicación }}</td>
+                    <td>{{ inventario.Estado }}</td>
+                    <td class="acciones">
+                        <form action="{{ url_for('main.ver_inventario', id=inventario.ID_Inventario) }}" method="GET" style="display:inline;">
+                            <button type="submit" class="btn view">Ver</button>
+                        </form>
+                        <form action="{{ url_for('main.editar_inventario', id=inventario.ID_Inventario) }}" method="GET" style="display:inline;">
+                            <button type="submit" class="btn edit">Editar</button>
+                        </form>
+                        <form action="{{ url_for('main.eliminar_inventario', id=inventario.ID_Inventario) }}" method="POST" style="display:inline;">
+                            <button type="submit" class="btn delete">Eliminar</button>
+                        </form>
+                    </td>
+                </tr>
                 {% endfor %}
             </tbody>
         </table>
 
-        <!-- Botones para agregar y volver al panel -->
+        <!-- Botones -->
         <div class="action-buttons-container">
             <button class="btn-volver" onclick="window.location.href='/panel'">Volver al Panel</button>
             <button class="btn add" onclick="window.location.href='{{ url_for('main.agregar_inventario') }}'">Agregar Inventario</button>
         </div>
+
+        <!-- Gráficas -->
+        <div class="inventario-graphs">
+            <div class="graph-card">
+                <canvas id="estadoInventarioChart"></canvas>
+            </div>
+            <div class="graph-card">
+                <canvas id="ubicacionInventarioChart"></canvas>
+            </div>
+        </div>
     </div>
 
+    <script>
+        const estadoData = {{ inventarios_por_estado | tojson }};
+        const ubicacionData = {{ inventarios_por_ubicacion | tojson }};
+
+        new Chart(document.getElementById("estadoInventarioChart"), {
+            type: 'bar',
+            data: {
+                labels: Object.keys(estadoData),
+                datasets: [{
+                    data: Object.values(estadoData),
+                    backgroundColor: '#4fc3f7'
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+
+        new Chart(document.getElementById("ubicacionInventarioChart"), {
+            type: 'doughnut',
+            data: {
+                labels: Object.keys(ubicacionData),
+                datasets: [{
+                    data: Object.values(ubicacionData),
+                    backgroundColor: ['#2ecc71', '#f1c40f', '#e67e22', '#9b59b6', '#3498db']
+                }]
+            },
+            options: {
+                responsive: true,
+                cutout: '60%',
+                plugins: {
+                    legend: { position: 'bottom' }
+                }
+            }
+        });
+    </script>
 </body>
 </html>
