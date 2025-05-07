@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gestión de Compras</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/compras.css') }}">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="compras-container">
+    <!-- Header -->
+    <div class="header-bar">
+      <h1>Gestión de Compras</h1>
+      <div class="logo-container">
+        <img src="{{ url_for('static', filename='images/logofp.png') }}" alt="Logo" class="logo">
+      </div>
+    </div>
+
+    <!-- Gráficas -->
+    <div class="dashboard-container">
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <canvas id="comprasPorVehiculoChart"></canvas>
+          <p><strong>Compras por Vehículo</strong></p>
+        </div>
+        <div class="kpi-card">
+          <canvas id="comprasPorMesChart"></canvas>
+          <p><strong>Compras por Mes</strong></p>
+        </div>
+      </div>
+    </div>
+    
+
+    <!-- Formulario para agregar compra -->
+    <div class="formulario-agregar">
+      <h2>Agregar Compra</h2>
+      <form method="POST" action="{{ url_for('main.ver_compras') }}">
+        <div class="form-group">
+          <label for="cliente">Cliente</label>
+          <select name="cliente_id" id="cliente" required>
+            <option value="" disabled selected>Selecciona un cliente</option>
+            {% for cliente in clientes %}
+              <option value="{{ cliente.ID_Cliente }}">{{ cliente.Nombre }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="vehiculo">Vehículo</label>
+          <select name="vehiculo_id" id="vehiculo" required>
+            <option value="" disabled selected>Selecciona un vehículo</option>
+            {% for vehiculo in vehiculos %}
+              <option value="{{ vehiculo.ID_Vehículo }}">{{ vehiculo.Marca }} {{ vehiculo.Modelo }} {{ vehiculo.Año }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="fecha">Fecha de Compra</label>
+          <input type="date" name="fecha_compra" id="fecha" required>
+        </div>
+
+        <div class="form-group">
+          <label for="monto">Monto</label>
+          <input type="number" name="monto" id="monto" step="0.01" required>
+        </div>
+
+        <button class="btn-submit" type="submit">Agregar</button>
+      </form>
+    </div>
+
+    <!-- Botón de volver -->
+    <div class="controls">
+      <button class="btn-volver" onclick="window.location.href='{{ session.get('panel_origen') }}'">Volver al Panel</button>
+    </div>
+
+    <!-- Tabla de compras -->
+    <div class="compras-table">
+      <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Cliente</th>
+            <th>Vehículo</th>
+            <th>Fecha</th>
+            <th>Monto</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for compra in compras %}
+          <tr>
+            <td>{{ compra.cliente.Nombre if compra.cliente else 'No asignado' }}</td>
+            <td>{{ compra.vehiculo.Marca }} {{ compra.vehiculo.Modelo }} {{ compra.vehiculo.Año }}</td>
+            <td>{{ compra.Fecha_compra.strftime('%d/%m/%Y') }}</td>
+            <td>${{ "%.2f"|format(compra.Monto) }}</td>
+            <td>
+              <form action="{{ url_for('main.eliminar_compra', id=compra.ID_Compra) }}" method="POST" style="display:inline;">
+                <button type="submit" class="btn-eliminar">Eliminar</button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Chart.js -->
+  <script>
+    const comprasPorVehiculo = {{ compras_por_vehiculo | tojson }};
+    const comprasPorMes = {{ compras_por_mes | tojson }};
+    
+    new Chart(document.getElementById("comprasPorVehiculoChart"), {
+      type: 'bar',
+      data: {
+        labels: Object.keys(comprasPorVehiculo),
+        datasets: [{
+          data: Object.values(comprasPorVehiculo),
+          backgroundColor: '#1abc9c'
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: {
+          y: { beginAtZero: true },
+          x: { ticks: { color: '#fff' } }
+        }
+      }
+    });
+
+    new Chart(document.getElementById("comprasPorMesChart"), {
+  type: 'line',
+  data: {
+    labels: Object.keys(comprasPorMes),
+    datasets: [{
+      label: 'Compras',
+      data: Object.values(comprasPorMes),
+      borderColor: '#00bfff',
+      backgroundColor: 'rgba(0, 191, 255, 0.2)',
+      tension: 0.3,
+      fill: true
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: { display: false }
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        ticks: { color: '#ccc' },
+        grid: { color: '#333' }
+      },
+      x: {
+        ticks: { color: '#ccc' },
+        grid: { display: false }
+      }
+    }
+  }
+});
+
+  </script>
+</body>
+</html>

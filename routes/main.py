@@ -664,5 +664,52 @@ def panel_asistente():
     creditos_por_mes = [{'mes': mes, 'total': float(total)} for mes, total in creditos_query]
     return render_template('panel_asistente.html', total_clientes=total_clientes, total_creditos=total_creditos, total_inventario=total_inventario, ventas_del_mes=ventas_del_mes, total_solicitudes_pendientes=total_solicitudes_pendientes,pagos_vencidos=pagos_vencidos, inventarios=inventarios,clientes_pendientes=clientes_pendientes,ventas_por_mes=ventas_por_mes,creditos_por_mes=creditos_por_mes)
 
+@main_bp.route('/compras', methods=['GET', 'POST'])
+def ver_compras():
+    if request.method == 'POST':
+        nueva_compra = Compra(
+            ID_Cliente=request.form['cliente_id'],
+            ID_Vehículo=request.form['vehiculo_id'],
+            Fecha_compra=request.form['fecha_compra'],
+            Monto=request.form['monto']
+        )
+        db.session.add(nueva_compra)
+        db.session.commit()
+        return redirect(url_for('main.ver_compras'))
 
+    compras = Compra.query.all()
+    clientes = Cliente.query.all()
+    vehiculos = Vehiculo.query.all()
 
+    # Gráfica: compras por vehículo
+    compras_por_vehiculo = {}
+    for compra in compras:
+        if compra.vehiculo:
+            nombre = f"{compra.vehiculo.Marca} {compra.vehiculo.Modelo} {compra.vehiculo.Año}"
+            compras_por_vehiculo[nombre] = compras_por_vehiculo.get(nombre, 0) + 1
+
+    # Gráfica: compras por mes (formato MM)
+    compras_query = db.session.query(
+        extract('month', Compra.Fecha_compra).label('mes'),
+        db.func.count(Compra.ID_Compra).label('total')
+    ).group_by('mes').order_by('mes').all()
+
+    compras_por_mes = {
+        f"{int(mes):02d}": total for mes, total in compras_query if mes is not None
+    }
+
+    return render_template(
+        "compras.html",
+        compras=compras,
+        clientes=clientes,
+        vehiculos=vehiculos,
+        compras_por_vehiculo=compras_por_vehiculo,
+        compras_por_mes=compras_por_mes  # <- Aquí se pasa correctamente
+    )
+
+@main_bp.route('/eliminar_compra/<int:id>', methods=['POST'])
+def eliminar_compra(id):
+    compra = Compra.query.get_or_404(id)
+    db.session.delete(compra)
+    db.session.commit()
+    return redirect(url_for('main.ver_compras'))
