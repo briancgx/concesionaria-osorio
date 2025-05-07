@@ -4,14 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar Cliente</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/clientes.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/editar.css') }}">
 </head>
 <body>
     <header>
-        <h1>Editar Cliente</h1>
+        
     </header>
 
     <section class="form-container">
+
+        <h1>Editar Cliente</h1>
+        
         <form action="/editar_cliente/{{ cliente.ID_Cliente }}" method="POST">
             <div class="form-group">
                 <label for="nombre">Nombre</label>
@@ -45,7 +48,8 @@
         </form>
 
         <div class="back-button-container">
-            <button class="btn-volver" onclick="window.location.href='/clientes'">Volver</button>
+            
+            <button class="btn-volver" onclick="window.location.href='{{ url_for('main.clientes') }}'">Volver</button>
         </div>
     </section>
 </body>

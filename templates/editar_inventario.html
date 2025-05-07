@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/editar.css') }}">
     <title>Editar Inventario</title>
 </head>
 <body>
 
-    <div class="container">
+    <div class="form-container">
         <div class="header-bar">
             <div class="title-container">
                 <h1>Editar Inventario</h1>
@@ -34,13 +35,14 @@
             </div>
 
             <div class="form-group">
-                <button type="submit" class="btn save">Guardar Cambios</button>
+                <button type="submit" class="btn-submit">Guardar Cambios</button>
             </div>
         </form>
-
-        <div class="action-buttons-container">
-            <button class="btn-volver" onclick="window.location.href='/inventario'">Volver a Inventario</button>
+        
+        <div class="back-button-container">
+            <button class="btn-volver" onclick="window.location.href='{{ url_for('main.inventario') }}'">Volver a Inventario</button>
         </div>
+        
     </div>
 
 </body>

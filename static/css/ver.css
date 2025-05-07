@@ -1,0 +1,79 @@
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #111;
+    font-family: 'Poppins', sans-serif;
+    color: #f1f1f1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.container {
+    background-color: #1e1e1e;
+    padding: 40px;
+    border-radius: 20px;
+    width: 100%;
+    max-width: 500px;
+    box-shadow: 0 0 25px rgba(0, 123, 255, 0.3);
+    text-align: center;
+}
+
+h1 {
+    margin-bottom: 25px;
+    font-size: 26px;
+    color: #00bfff;
+    text-align: center;
+}
+
+p {
+    font-size: 16px;
+    margin: 12px 0;
+}
+
+strong {
+    color: #ccc;
+}
+
+a {
+    display: inline-block;
+    margin-top: 25px;
+    background-color: transparent;
+    color: #00bfff;
+    border: 1px solid #00bfff;
+    padding: 10px 20px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-size: 14px;
+    text-align: center;
+    transition: 0.3s;
+}
+
+a:hover {
+    background-color: #00bfff;
+    color: white;
+}
+
+.back-button-container {
+    text-align: center;
+    margin-top: 25px;
+}
+
+.btn-volver {
+    display: inline-block;
+    background-color: transparent;
+    color: #00bfff;
+    border: 1px solid #00bfff;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-size: 14px;
+    cursor: pointer;
+    text-decoration: none; /* <-- Esto quita la línea fea */
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.btn-volver:hover {
+    background-color: #00bfff;
+    color: white;
+}

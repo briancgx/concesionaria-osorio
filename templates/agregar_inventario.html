@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agregar Inventario</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/inventarios.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/agregar.css') }}">
 </head>
 <body>
 
@@ -35,12 +35,12 @@
             </div>
 
             <div class="form-group">
-                <button type="submit" class="btn add">Agregar Inventario</button>
+                <button type="submit" class="btn-agregar">Agregar Inventario</button>
             </div>
         </form>
 
         <div class="back-button-container">
-            <a href="{{ url_for('main.inventario') }}" class="btn-volver">Volver al Inventario</a>
+            <button type="button" class="btn-volver" onclick="window.location.href='{{ url_for('main.inventario') }}'">Volver al Inventario</button>
         </div>
     </div>
 

@@ -4,13 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar Crédito</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/creditos.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/editar.css') }}">
 </head>
 <body>
-    <div class="container">
+    <div class="form-container">
         <h1>Editar Crédito</h1>
 
-        <!-- Formulario de edición de crédito -->
         <form method="POST">
             <div class="form-group">
                 <label for="id_cliente">Cliente</label>
@@ -48,14 +47,14 @@
             </div>
 
             <div class="form-group">
-                <button type="submit" class="btn-editar">Guardar Cambios</button>
+                <button type="submit" class="btn-submit">Guardar Cambios</button>
             </div>
         </form>
 
-        <!-- Botón para volver -->
         <div class="back-button-container">
-            <a href="{{ url_for('main.creditos') }}" class="btn-volver">Volver a la lista de Créditos</a>
+            <button class="btn-volver" onclick="window.location.href='{{ url_for('main.creditos') }}'">Volver a la lista de Créditos</button>
         </div>
+        
     </div>
 </body>
 </html>

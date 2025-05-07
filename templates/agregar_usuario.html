@@ -4,18 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agregar Usuario</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/agregar.css') }}">
 </head>
 <body>
     <div class="container">
         <h1>Agregar Usuario</h1>
 
         <form method="POST">
+            <div class="form-group">
             <label for="nombre_usuario">Nombre de Usuario:</label>
             <input type="text" id="nombre_usuario" name="nombre_usuario" required>
-            
+            </div>
+            <div class="form-group">
             <label for="contraseña">Contraseña:</label>
             <input type="password" id="contraseña" name="contraseña" required>
-            
+            </div>
+            <div class="form-group">
             <label for="rol">Rol:</label>
             <select id="rol" name="rol" required>
                 <option value="Gerente">Gerente</option>
@@ -23,19 +27,28 @@
                 <option value="Asesor Ventas">Asesor Ventas</option>
                 <option value="Asistente">Asistente</option>
             </select>
-            
+        </div>
+            <div class="form-group">
             <!-- Fecha de Creación -->
             <label for="fecha_creacion">Fecha de Creación:</label>
             <input type="datetime-local" id="fecha_creacion" name="fecha_creacion" value="{{ current_time }}" required>
-            
+            <div class="form-group">
+            </div>
             <!-- Último Acceso -->
             <label for="ultimo_acceso">Último Acceso:</label>
             <input type="datetime-local" id="ultimo_acceso" name="ultimo_acceso" value="{{ current_time }}" required>
-            
-            <button type="submit">Guardar Usuario</button>
+            </div>
+
+            <div class="form-group">
+                <button type="submit" class="btn-agregar">Guardar Usuario</button>
+            </div>
+    
         </form>
 
-        <a href="{{ url_for('main.usuarios') }}">Volver a la lista de usuarios</a>
+
+        <div class="back-button-container">
+            <button type="button" class="btn-volver" onclick="window.location.href='{{ url_for('main.usuarios') }}'">Volver a la lista de usuarios</button>
+        </div>
     </div>
 </body>
 </html>

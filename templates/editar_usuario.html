@@ -3,39 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/editar.css') }}">
     <title>Editar Usuario</title>
 </head>
 <body>
-    <div class="container">
+    <div class="form-container">
         <h1>Editar Usuario</h1>
 
         <form method="POST">
-            <label for="nombre_usuario">Nombre de Usuario:</label>
-            <input type="text" id="nombre_usuario" name="nombre_usuario" value="{{ usuario.Nombre_usuario }}" required>
+            <div class="form-group">
+                <label for="nombre_usuario">Nombre de Usuario:</label>
+                <input type="text" id="nombre_usuario" name="nombre_usuario" value="{{ usuario.Nombre_usuario }}" required>
+            </div>
             
-            <label for="contraseña">Contraseña:</label>
-            <input type="password" id="contraseña" name="contraseña" value="{{ usuario.Contraseña }}" required>
+            <div class="form-group">
+                <label for="contraseña">Contraseña:</label>
+                <input type="password" id="contraseña" name="contraseña" value="{{ usuario.Contraseña }}" required>
+            </div>
             
-            <label for="rol">Rol:</label>
-            <select id="rol" name="rol" required>
-                <option value="Gerente" {% if usuario.Rol == 'Gerente' %}selected{% endif %}>Gerente</option>
-                <option value="Administrador" {% if usuario.Rol == 'Administrador' %}selected{% endif %}>Administrador</option>
-                <option value="Asesor Ventas" {% if usuario.Rol == 'Asesor Ventas' %}selected{% endif %}>Asesor Ventas</option>
-                <option value="Asistente Administrativo" {% if usuario.Rol == 'Asistente Administrativo' %}selected{% endif %}>Asistente Administrativo</option>
-            </select>
+            <div class="form-group">
+                <label for="rol">Rol:</label>
+                <select id="rol" name="rol" required>
+                    <option value="Gerente" {% if usuario.Rol == 'Gerente' %}selected{% endif %}>Gerente</option>
+                    <option value="Administrador" {% if usuario.Rol == 'Administrador' %}selected{% endif %}>Administrador</option>
+                    <option value="Asesor Ventas" {% if usuario.Rol == 'Asesor Ventas' %}selected{% endif %}>Asesor Ventas</option>
+                    <option value="Asistente Administrativo" {% if usuario.Rol == 'Asistente Administrativo' %}selected{% endif %}>Asistente Administrativo</option>
+                </select>
+            </div>
 
-            <!-- Fecha de Creación -->
-            <label for="fecha_creacion">Fecha de Creación:</label>
-            <input type="datetime-local" id="fecha_creacion" name="fecha_creacion" value="{{ usuario.Fecha_creacion.strftime('%Y-%m-%dT%H:%M') }}" required>
+            <div class="form-group">
+                <label for="fecha_creacion">Fecha de Creación:</label>
+                <input type="datetime-local" id="fecha_creacion" name="fecha_creacion" value="{{ usuario.Fecha_creacion.strftime('%Y-%m-%dT%H:%M') }}" required>
+            </div>
             
-            <!-- Último Acceso -->
-            <label for="ultimo_acceso">Último Acceso:</label>
-            <input type="datetime-local" id="ultimo_acceso" name="ultimo_acceso" value="{{ usuario.Ultimo_acceso.strftime('%Y-%m-%dT%H:%M') }}" required>
+            <div class="form-group">
+                <label for="ultimo_acceso">Último Acceso:</label>
+                <input type="datetime-local" id="ultimo_acceso" name="ultimo_acceso" value="{{ usuario.Ultimo_acceso.strftime('%Y-%m-%dT%H:%M') }}" required>
+            </div>
 
-            <button type="submit">Guardar Cambios</button>
+            <div class="form-group">
+                <button type="submit" class="btn-submit">Guardar Cambios</button>
+            </div>
         </form>
 
-        <a href="{{ url_for('main.usuarios') }}">Volver a la lista de usuarios</a>
+        <div class="back-button-container">
+            <button class="btn-volver" onclick="window.location.href='{{ url_for('main.usuarios') }}'">Volver a la lista de usuarios</button>
+        </div>
     </div>
 </body>
 </html>

@@ -193,7 +193,7 @@ def inventario2():
 
     # Retornar todo a la plantilla
     return render_template(
-        'inventarios2.html',
+        'inventarios.html',
         inventarios=inventarios,
         inventarios_por_estado=inventarios_por_estado,
         inventarios_por_ubicacion=inventarios_por_ubicacion

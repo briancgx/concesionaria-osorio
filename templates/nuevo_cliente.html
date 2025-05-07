@@ -4,14 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agregar Cliente</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/clientes.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/agregar.css') }}">
 </head>
 <body>
-    <header>
-        <h1>Agregar Cliente</h1>
-    </header>
 
-    <section class="form-container">
+
+    <section class="container">
+        <h1>Agregar Cliente</h1>
         <form action="/agregar_cliente" method="POST">
             <div class="form-group">
                 <label for="nombre">Nombre</label>
@@ -41,7 +40,7 @@
                 </select>
             </div>
 
-            <button type="submit" class="btn-submit">Guardar</button>
+            <button type="submit" class="btn-agregar">Guardar</button>
         </form>
 
         <div class="back-button-container">

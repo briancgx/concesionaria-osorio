@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ver Usuario</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/ver.css') }}">
 </head>
 <body>
     <div class="container">
@@ -14,7 +15,9 @@
         <p><strong>Fecha de Creación:</strong> {{ usuario.Fecha_creacion }}</p>
         <p><strong>Último Acceso:</strong> {{ usuario.Ultimo_acceso }}</p>
 
-        <a href="{{ url_for('main.usuarios') }}">Volver a la lista de usuarios</a>
+        <div class="back-button-container">
+            <a href="{{ url_for('main.usuarios') }}" class="btn-volver">Volver a la lista de usuarios</a>
+        </div>
     </div>
 </body>
 </html>

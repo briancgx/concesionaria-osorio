@@ -4,16 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ver Crédito</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/ver.css') }}">
 </head>
 <body>
-    <h1>Detalles del Crédito</h1>
+    <div class="container">
+        <h1>Detalles del Crédito</h1>
 
-    <p><strong>Nombre del Cliente:</strong> {{ credito.cliente.Nombre }}</p>
-    <p><strong>Monto del Crédito:</strong> ${{ credito.Monto_crédito }}</p>
-    <p><strong>Interés:</strong> {{ credito.Interés }}%</p>
-    <p><strong>Fecha de Otorgamiento:</strong> {{ credito.Fecha_otorgamiento.strftime('%d/%m/%Y') }}</p>
-    <p><strong>Estado del Crédito:</strong> {{ credito.Estado_Crédito }}</p>
+        <p><strong>Nombre del Cliente:</strong> {{ credito.cliente.Nombre }}</p>
+        <p><strong>Monto del Crédito:</strong> ${{ credito.Monto_crédito }}</p>
+        <p><strong>Interés:</strong> {{ credito.Interés }}%</p>
+        <p><strong>Fecha de Otorgamiento:</strong> {{ credito.Fecha_otorgamiento.strftime('%d/%m/%Y') }}</p>
+        <p><strong>Estado del Crédito:</strong> {{ credito.Estado_Crédito }}</p>
 
-    <a href="{{ url_for('main.creditos') }}">Volver a la lista de Créditos</a>
+        <div class="back-button-container">
+            <a href="{{ url_for('main.creditos') }}" class="btn-volver">Volver a la lista de Créditos</a>
+        </div>
+    </div>
 </body>
 </html>
