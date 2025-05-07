@@ -3,6 +3,7 @@ from sqlalchemy import extract
 from models import db, Cliente, Credito, Inventario, Vehiculo, Compra, Pago, Usuario
 from collections import Counter
 from collections import defaultdict
+from decimal import Decimal
 
 main_bp = Blueprint('main', __name__)
 
@@ -713,3 +714,54 @@ def eliminar_compra(id):
     db.session.delete(compra)
     db.session.commit()
     return redirect(url_for('main.ver_compras'))
+   
+@main_bp.route('/pagos', methods=['GET', 'POST'])
+def ver_pagos():
+    if request.method == 'POST':
+        credito_id = int(request.form['credito_id'])
+        monto_pago = Decimal(request.form['monto_pago'])
+        fecha_pago = request.form['fecha_pago']
+
+        credito = Credito.query.get(credito_id)
+        if not credito:
+            return "Crédito no encontrado", 404
+
+        # Sumar pagos anteriores
+        total_anterior = db.session.query(db.func.sum(Pago.Monto_pago))\
+            .filter(Pago.ID_Crédito == credito_id).scalar() or Decimal('0')
+        
+        total_acumulado = total_anterior + monto_pago
+
+        # Determinar estado
+        estado = 'Pago' if total_acumulado >= credito.Monto_crédito else 'Debe'
+
+        # Crear el nuevo pago
+        nuevo_pago = Pago(
+            ID_Crédito=credito_id,
+            Fecha_pago=fecha_pago,
+            Monto_pago=monto_pago,
+            Estado=estado
+        )
+        db.session.add(nuevo_pago)
+
+        # Si se completó el crédito, actualizar todos los pagos de ese crédito a "Pago"
+        if estado == 'Pago':
+            pagos_previos = Pago.query.filter(Pago.ID_Crédito == credito_id).all()
+            for pago in pagos_previos:
+                pago.Estado = 'Pago'
+
+        db.session.commit()
+        return redirect(url_for('main.ver_pagos'))
+
+    pagos = Pago.query.all()
+    creditos = Credito.query.all()
+    return render_template("pagos.html", pagos=pagos, creditos=creditos)
+
+
+
+@main_bp.route('/eliminar_pago/<int:id>', methods=['POST'])
+def eliminar_pago(id):
+    pago = Pago.query.get_or_404(id)
+    db.session.delete(pago)
+    db.session.commit()
+    return redirect(url_for('main.ver_pagos'))

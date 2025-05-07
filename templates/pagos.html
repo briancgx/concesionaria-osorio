@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gestión de Pagos</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/clientes.css') }}">
+</head>
+<body>
+  <div class="pagos-container">
+    <!-- Encabezado -->
+    <div class="header-bar">
+      <h1>Gestión de Pagos</h1>
+      <img src="{{ url_for('static', filename='images/logofp.png') }}" alt="Logo" class="logo">
+    </div>
+
+    <!-- Formulario de nuevo pago -->
+    <div class="formulario-agregar">
+        <h2>Agregar Pago</h2>
+        <form method="POST" action="{{ url_for('main.ver_pagos') }}">
+          <div class="form-group">
+            <label for="credito">Crédito</label>
+            <select name="credito_id" id="credito" required onchange="filtrarPagos()">
+              <option value="" disabled selected>Selecciona un crédito</option>
+              {% for credito in creditos %}
+                <option value="{{ credito.ID_Crédito }}">
+                  Cliente {{ credito.cliente.Nombre }} – ${{ credito.Monto_crédito }}
+                </option>
+              {% endfor %}
+            </select>
+          </div>
+      
+          <div class="form-group">
+            <label for="fecha">Fecha de Pago</label>
+            <input type="date" name="fecha_pago" id="fecha" required>
+          </div>
+      
+          <div class="form-group">
+            <label for="monto">Monto</label>
+            <input type="number" name="monto_pago" id="monto" step="0.01" required>
+          </div>
+      
+          <button class="btn-submit" type="submit">Agregar Pago</button>
+        </form>
+      </div>
+
+<!-- Botones -->
+<div class="controls">
+  <button class="btn-volver" onclick="window.location.href='{{ session.get('panel_origen') }}'">Volver al Panel</button>
+</div>
+
+<!-- Tabla de pagos -->
+<div class="table-container">
+  <table>
+    <thead>
+      <tr>
+        <th>Cliente</th>
+        <th>Monto del Crédito</th>
+        <th>Fecha del Pago</th>
+        <th>Monto Pagado</th>
+        <th>Estado</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody id="tabla-pagos">
+      {% for pago in pagos %}
+      <tr data-credito-id="{{ pago.ID_Crédito }}">
+        <td>{{ pago.credito.cliente.Nombre }}</td>
+        <td>${{ "%.2f"|format(pago.credito.Monto_crédito) }}</td>
+        <td>{{ pago.Fecha_pago.strftime('%d/%m/%Y') }}</td>
+        <td>${{ "%.2f"|format(pago.Monto_pago) }}</td>
+        <td>{{ pago.Estado }}</td>
+        <td>
+          <form action="{{ url_for('main.eliminar_pago', id=pago.ID_Pago) }}" method="POST" style="display:inline;">
+            <button type="submit" class="btn-eliminar">Eliminar</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+<script>
+    function filtrarPagos() {
+      const select = document.getElementById("credito");
+      const creditoId = select.value;
+      const filas = document.querySelectorAll("#tabla-pagos tr");
+  
+      filas.forEach(fila => {
+        if (fila.dataset.creditoId === creditoId || creditoId === "") {
+          fila.style.display = "";
+        } else {
+          fila.style.display = "none";
+        }
+      });
+    }
+  </script>
+  </div>
+</body>
+</html>
