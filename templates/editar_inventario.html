@@ -16,19 +16,30 @@
         </div>
 
         <form action="{{ url_for('main.editar_inventario', id=inventario.ID_Inventario) }}" method="POST">
+   
             <div class="form-group">
-                <label for="id_vehiculo">Vehículo</label>
-                <input type="text" id="id_vehiculo" name="id_vehiculo" value="{{ inventario.vehiculo.Marca }} {{ inventario.vehiculo.Modelo }}" readonly>
+                <label for="marca">Marca</label>
+                <input type="text" name="marca" id="marca" value="{{ inventario.vehiculo.Marca }}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="modelo">Modelo</label>
+                <input type="text" name="modelo" id="modelo" value="{{ inventario.vehiculo.Modelo }}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="año">Año</label>
+                <input type="number" name="año" id="año" value="{{ inventario.vehiculo.Año }}" required min="1900" max="2099">
             </div>
 
             <div class="form-group">
                 <label for="ubicacion">Ubicación</label>
-                <input type="text" id="ubicacion" name="ubicacion" value="{{ inventario.Ubicación }}">
+                <input type="text" id="ubicacion" name="ubicacion" value="{{ inventario.Ubicación }}" required>
             </div>
 
             <div class="form-group">
                 <label for="estado">Estado</label>
-                <select id="estado" name="estado">
+                <select id="estado" name="estado" required>
                     <option value="Disponible" {% if inventario.Estado == 'Disponible' %}selected{% endif %}>Disponible</option>
                     <option value="No Disponible" {% if inventario.Estado == 'No Disponible' %}selected{% endif %}>No Disponible</option>
                 </select>

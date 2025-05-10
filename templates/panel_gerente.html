@@ -33,19 +33,48 @@
     <div class="alerts-section">
       <h2>Alertas y Notificaciones</h2>
       <ul>
-        {% for pago in pagos_vencidos %}
-          <li class="alert alert-danger">Pago vencido - Cliente #{{ pago.credito.ID_Cliente }}</li>
-        {% endfor %}
         <li class="alert alert-info">Solicitudes de crédito pendientes: {{ total_solicitudes_pendientes }}</li>
+        <!-- Créditos saldados -->
+        {% for nombre, id_credito in creditos_pagados %}
+          <li class="alert alert-success">{{ nombre }} ha saldado el Crédito #{{ id_credito }}.</li>
+        {% endfor %}
+    
+        <!-- Pagos realizados -->
+        {% for pago in pagos_realizados %}
+          <li class="alert alert-warningg">
+            {{ pago.credito.cliente.Nombre }} realizó un pago de ${{ "{:,.2f}".format(pago.Monto_pago) }} el {{ pago.Fecha_pago.strftime('%d/%m/%Y') }}
+          </li>
+        {% endfor %}
+    
+        <!-- Abonos -->
+        {% for nombre, id_credito, abonado, total in creditos_con_pagos %}
+          <li class="alert alert-abono">{{ nombre }} ha abonado ${{ abonado }} de ${{ total }} en el Crédito #{{ id_credito }}.</li>
+        {% endfor %}
+    
+        <!-- Compras realizadas -->
+        {% for compra in compras_realizadas %}
+          <li class="alert alert-success">
+            {{ compra.cliente.Nombre }} compró un {{ compra.vehiculo.Marca }} {{ compra.vehiculo.Modelo }} ({{ compra.vehiculo.Año }}) por ${{ "{:,.2f}".format(compra.Monto) }} el {{ compra.Fecha_compra.strftime('%d/%m/%Y') }}
+          </li>
+        {% endfor %}
+    
+        <!-- Pagos vencidos -->
+        {% for pago in pagos_vencidos %}
+          <li class="alert alert-dangerr">Pago vencido del Cliente {{ pago.credito.cliente.Nombre }} (Crédito #{{ pago.ID_Crédito }}) - Fecha: {{ pago.Fecha_pago }}</li>
+        {% endfor %}
+    
+        <!-- Inventario agotado -->
         {% for inventario in inventarios %}
           {% if inventario.Estado == 'No Disponible' %}
-            <li class="alert alert-danger">Auto {{ inventario.ID_Vehículo }} fuera de inventario</li>
+            <li class="alert alert-dangers">Auto {{ inventario.vehiculo.Marca }} {{ inventario.vehiculo.Modelo }} fuera de inventario</li>
           {% endif %}
         {% endfor %}
+    
+        <!-- Solicitudes pendientes -->
         {% for cliente in clientes_pendientes %}
-          <li class="alert alert-warning">{{ cliente.Nombre }} con solicitud pendiente</li>
+          <li class="alert alert-warning">{{ cliente.Nombre }} con solicitud de crédito pendiente</li>
         {% else %}
-          <li class="alert alert-success">No hay solicitudes pendientes</li>
+          <li class="alert alert-success">No hay solicitudes de crédito pendientes</li>
         {% endfor %}
       </ul>
     </div>

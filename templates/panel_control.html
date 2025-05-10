@@ -37,19 +37,20 @@
     <div class="alerts-section">
       <h2>Alertas y Notificaciones</h2>
       <ul>
-        {% for pago in pagos_vencidos %}
-          <li class="alert alert-danger">Pago vencido - Cliente #{{ pago.credito.ID_Cliente }}</li>
-        {% endfor %}
+
         <li class="alert alert-info">Solicitudes de crédito pendientes: {{ total_solicitudes_pendientes }}</li>
+        {% for pago in pagos_vencidos %}
+        <li class="alert alert-danger">Pago vencido - Cliente #{{ pago.credito.ID_Cliente }}</li>
+        {% endfor %}
         {% for inventario in inventarios %}
           {% if inventario.Estado == 'No Disponible' %}
-            <li class="alert alert-danger">Auto {{ inventario.ID_Vehículo }} fuera de inventario</li>
+          <li class="alert alert-dangers">Auto {{ inventario.vehiculo.Marca + " "+inventario.vehiculo.Modelo }} fuera de inventario</li>
           {% endif %}
         {% endfor %}
         {% for cliente in clientes_pendientes %}
-          <li class="alert alert-warning">{{ cliente.Nombre }} con solicitud pendiente</li>
+          <li class="alert alert-warning">{{ cliente.Nombre }} con solicitud de crédito pendiente</li>
         {% else %}
-          <li class="alert alert-success">No hay solicitudes pendientes</li>
+          <li class="alert alert-success">No hay solicitudes de crédito pendientes</li>
         {% endfor %}
       </ul>
     </div>

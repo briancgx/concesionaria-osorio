@@ -12,14 +12,16 @@
         <h1>Agregar Inventario</h1>
 
         <form method="POST">
-            <div class="form-group">
-                <label for="id_vehiculo">Seleccionar Vehículo</label>
-                <select name="id_vehiculo" id="id_vehiculo" required>
+            <div class="form-group"> 
+                <label for="vehiculo">Seleccionar o agregar vehículo (Marca Modelo (Año)) </label>
+                <input list="vehiculos_list" name="vehiculo" id="vehiculo" required class="form-control">
+                <datalist id="vehiculos_list">
                     {% for vehiculo in vehiculos %}
-                        <option value="{{ vehiculo.ID_Vehículo }}">{{ vehiculo.Marca }} {{ vehiculo.Modelo }} ({{ vehiculo.Año }})</option>
+                        <option value="{{ vehiculo.Marca }} {{ vehiculo.Modelo }} ({{ vehiculo.Año }})">
                     {% endfor %}
-                </select>
+                </datalist>
             </div>
+            
 
             <div class="form-group">
                 <label for="ubicacion">Ubicación</label>

@@ -89,7 +89,14 @@ h2 {
 }
 
 .alert.alert-warning {
-  border-left-color: #ffc107;
+  border-left-color: #17a2b8;
+}
+.alert.alert-warningg {
+  border-left-color: #ff07cd;
+}
+
+.alert.alert-abono {
+  border-left-color: #6ef407;
 }
 
 .alert.alert-info {
@@ -99,7 +106,13 @@ h2 {
 .alert.alert-success {
   border-left-color: #28a745;
 }
+.alert.alert-dangerr {
+  border-left-color: #ff0019; /* Color de borde */
 
+}
+.alert.alert-dangers {
+  border-left-color: #ffc107;
+}
 /* Accesos rápidos */
 .quick-access {
   background: #1e1e1e;

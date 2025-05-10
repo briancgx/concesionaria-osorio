@@ -4,6 +4,8 @@ from models import db, Cliente, Credito, Inventario, Vehiculo, Compra, Pago, Usu
 from collections import Counter
 from collections import defaultdict
 from decimal import Decimal
+from datetime import datetime
+from sqlalchemy import func
 
 main_bp = Blueprint('main', __name__)
 
@@ -209,19 +211,24 @@ def ver_inventario(id):
 @main_bp.route('/editar_inventario/<int:id>', methods=['GET', 'POST'])
 def editar_inventario(id):
     inventario = Inventario.query.get_or_404(id)
+    vehiculo = inventario.vehiculo
 
     if request.method == 'POST':
-        # Obtener los datos del formulario
+        # Actualizar datos del vehículo vinculado
+        vehiculo.Marca = request.form['marca']
+        vehiculo.Modelo = request.form['modelo']
+        vehiculo.Año = int(request.form['año'])
+
+        # Actualizar datos del inventario
         inventario.Ubicación = request.form['ubicacion']
         inventario.Estado = request.form['estado']
-        
-        # Guardar los cambios en la base de datos
+
         db.session.commit()
-        
-        flash('Inventario actualizado exitosamente', 'success')
+        flash('Inventario actualizado correctamente', 'success')
         return redirect(url_for('main.inventario'))
-    
+
     return render_template('editar_inventario.html', inventario=inventario)
+
 
 
 @main_bp.route('/eliminar_inventario/<int:id>', methods=['POST'])
@@ -238,29 +245,45 @@ def eliminar_inventario(id):
 @main_bp.route('/agregar_inventario', methods=['GET', 'POST'])
 def agregar_inventario():
     if request.method == 'POST':
+        import re
+
         # Obtener los datos del formulario
-        id_vehiculo = request.form['id_vehiculo']
+        vehiculo_str = request.form['vehiculo']
         ubicacion = request.form['ubicacion']
         estado = request.form['estado']
-        
-        # Crear un nuevo inventario
+
+        # Extraer marca, modelo y año con regex
+        match = re.match(r'^(.+?)\s+(.+?)\s+\((\d{4})\)$', vehiculo_str)
+
+        if not match:
+            flash('Formato inválido. Usa: Marca Modelo (Año)', 'error')
+            return redirect(url_for('main.agregar_inventario'))
+
+        marca = match.group(1).strip()
+        modelo = match.group(2).strip()
+        año = int(match.group(3))
+
+   
+        vehiculo = Vehiculo(Marca=marca, Modelo=modelo, Año=año)
+        db.session.add(vehiculo)
+        db.session.commit()
+
+        id_vehiculo = vehiculo.ID_Vehículo
+
+        # Crear nuevo inventario
         nuevo_inventario = Inventario(
             ID_Vehículo=id_vehiculo,
             Ubicación=ubicacion,
             Estado=estado
         )
-        
-        # Guardar el inventario en la base de datos
         db.session.add(nuevo_inventario)
         db.session.commit()
-        
+
         flash('Inventario agregado exitosamente', 'success')
         return redirect(url_for('main.inventario'))
-    
-    # Obtener la lista de vehículos para mostrar en el formulario
-    vehiculos = Vehiculo.query.all()
 
-    # Pasar los vehículos al template
+    # GET: Cargar vehículos existentes para mostrar en el datalist
+    vehiculos = Vehiculo.query.all()
     return render_template('agregar_inventario.html', vehiculos=vehiculos)
 
 # ---------- Créditos ----------
@@ -557,25 +580,28 @@ def agregar_cliente():
     return render_template('agregar_cliente.html')
 
 
-
 @main_bp.route('/panel_gerente')
 def panel_gerente():
-    session['panel_origen'] = request.path 
-    total_clientes = Cliente.query.filter(Cliente.Estado_cliente == 'Activo').count()
-    total_creditos = Credito.query.filter(Credito.Estado_Crédito == 'Aprobado').with_entities(db.func.sum(Credito.Monto_crédito)).scalar() or 0
-    total_inventario = Inventario.query.filter(Inventario.Estado == 'Disponible').count()
-    total_solicitudes_pendientes = Credito.query.filter(Credito.Estado_Crédito == 'Pendiente').count()  # Contar créditos pendientes
-    # Calcular las ventas del mes
-    # Calcular las ventas del mes
+    session['panel_origen'] = request.path
     fecha_actual = datetime.now()
     primer_dia_mes = datetime(fecha_actual.year, fecha_actual.month, 1)
-    ventas_del_mes = Compra.query.with_entities(db.func.sum(db.func.coalesce(Compra.Monto, 0)))\
-                             .filter(Compra.Fecha_compra >= primer_dia_mes, Compra.Fecha_compra < fecha_actual)\
-                             .scalar() or 0
 
+    total_clientes = Cliente.query.filter(Cliente.Estado_cliente == 'Activo').count()
+    total_creditos = Credito.query.filter(Credito.Estado_Crédito == 'Aprobado')\
+        .with_entities(db.func.sum(Credito.Monto_crédito)).scalar() or 0
+    total_inventario = Inventario.query.filter(Inventario.Estado == 'Disponible').count()
+    total_solicitudes_pendientes = Credito.query.filter(Credito.Estado_Crédito == 'Pendiente').count()
+    ventas_del_mes = Compra.query.with_entities(db.func.sum(db.func.coalesce(Compra.Monto, 0)))\
+        .filter(Compra.Fecha_compra >= primer_dia_mes, Compra.Fecha_compra < fecha_actual).scalar() or 0
+
+    # Datos adicionales
     pagos_vencidos = Pago.query.filter(Pago.Fecha_pago < fecha_actual, Pago.Estado == 'debe').all()
+    pagos_realizados = Pago.query.filter(Pago.Estado == 'Pago').all()
+    compras_realizadas = Compra.query.all()
     inventarios = Inventario.query.all()
-    clientes_pendientes = Cliente.query.join(Credito).filter(Credito.Estado_Crédito == 'Pendiente').all()    # 🟢 VENTAS POR MES DINÁMICO (ahora sí JSON-serializable)
+    clientes_pendientes = Cliente.query.join(Credito).filter(Credito.Estado_Crédito == 'Pendiente').all()
+
+    # Gráficas
     ventas_query = db.session.query(
         extract('month', Compra.Fecha_compra).label('mes'),
         db.func.sum(Compra.Monto).label('total')
@@ -583,36 +609,68 @@ def panel_gerente():
 
     ventas_por_mes = [{'mes': mes, 'total': float(total)} for mes, total in ventas_query]
 
-    # 🟢 CRÉDITOS POR MES DINÁMICO
     creditos_query = db.session.query(
         extract('month', Credito.Fecha_otorgamiento).label('mes'),
         db.func.sum(Credito.Monto_crédito).label('total')
-    ).filter(Credito.Estado_Crédito == 'Aprobado')\
-     .group_by('mes').order_by('mes').all()
+    ).filter(Credito.Estado_Crédito == 'Aprobado').group_by('mes').order_by('mes').all()
 
     creditos_por_mes = [{'mes': mes, 'total': float(total)} for mes, total in creditos_query]
 
-    return render_template('panel_gerente.html', total_clientes=total_clientes, total_creditos=total_creditos, total_inventario=total_inventario, ventas_del_mes=ventas_del_mes, total_solicitudes_pendientes=total_solicitudes_pendientes,pagos_vencidos=pagos_vencidos, inventarios=inventarios,clientes_pendientes=clientes_pendientes,ventas_por_mes=ventas_por_mes,creditos_por_mes=creditos_por_mes)
+    # Créditos pagados o con abonos
+    creditos = Credito.query.all()
+    creditos_pagados = []
+    creditos_con_pagos = []
 
+    for credito in creditos:
+        suma_pagos = db.session.query(db.func.sum(Pago.Monto_pago))\
+            .filter(Pago.ID_Crédito == credito.ID_Crédito).scalar() or Decimal('0')
+
+        if suma_pagos >= credito.Monto_crédito:
+            creditos_pagados.append((credito.cliente.Nombre, credito.ID_Crédito))
+        elif suma_pagos > 0:
+            creditos_con_pagos.append((credito.cliente.Nombre, credito.ID_Crédito, float(suma_pagos), float(credito.Monto_crédito)))
+
+    return render_template('panel_gerente.html',
+        total_clientes=total_clientes,
+        total_creditos=total_creditos,
+        total_inventario=total_inventario,
+        ventas_del_mes=ventas_del_mes,
+        total_solicitudes_pendientes=total_solicitudes_pendientes,
+        pagos_vencidos=pagos_vencidos,
+        pagos_realizados=pagos_realizados,
+        compras_realizadas=compras_realizadas,
+        inventarios=inventarios,
+        clientes_pendientes=clientes_pendientes,
+        ventas_por_mes=ventas_por_mes,
+        creditos_por_mes=creditos_por_mes,
+        creditos_pagados=creditos_pagados,
+        creditos_con_pagos=creditos_con_pagos
+    )
 
 @main_bp.route('/panel_asesor')
 def panel_asesor():
     session['panel_origen'] = request.path 
-    total_clientes = Cliente.query.filter(Cliente.Estado_cliente == 'Activo').count()
-    total_creditos = Credito.query.filter(Credito.Estado_Crédito == 'Aprobado').with_entities(db.func.sum(Credito.Monto_crédito)).scalar() or 0
-    total_inventario = Inventario.query.filter(Inventario.Estado == 'Disponible').count()
-    total_solicitudes_pendientes = Credito.query.filter(Credito.Estado_Crédito == 'Pendiente').count()  # Contar créditos pendientes
-    # Calcular las ventas del mes
-    # Calcular las ventas del mes
     fecha_actual = datetime.now()
     primer_dia_mes = datetime(fecha_actual.year, fecha_actual.month, 1)
-    ventas_del_mes = Compra.query.with_entities(db.func.sum(db.func.coalesce(Compra.Monto, 0)))\
-                             .filter(Compra.Fecha_compra >= primer_dia_mes, Compra.Fecha_compra < fecha_actual)\
-                             .scalar() or 0
 
+    total_clientes = Cliente.query.filter(Cliente.Estado_cliente == 'Activo').count()
+    total_creditos = Credito.query.filter(Credito.Estado_Crédito == 'Aprobado')\
+                         .with_entities(db.func.sum(Credito.Monto_crédito)).scalar() or 0
+    total_inventario = Inventario.query.filter(Inventario.Estado == 'Disponible').count()
+    total_solicitudes_pendientes = Credito.query.filter(Credito.Estado_Crédito == 'Pendiente').count()
+
+    ventas_del_mes = Compra.query.with_entities(db.func.sum(db.func.coalesce(Compra.Monto, 0)))\
+                         .filter(Compra.Fecha_compra >= primer_dia_mes, Compra.Fecha_compra < fecha_actual)\
+                         .scalar() or 0
+
+    # 🔔 NUEVAS LISTAS PARA ALERTAS
     pagos_vencidos = Pago.query.filter(Pago.Fecha_pago < fecha_actual, Pago.Estado == 'debe').all()
+    pagos_realizados = Pago.query.filter(Pago.Fecha_pago >= primer_dia_mes).all()
+    compras_recientes = Compra.query.filter(Compra.Fecha_compra >= primer_dia_mes).all()
     inventarios = Inventario.query.all()
-    clientes_pendientes = Cliente.query.join(Credito).filter(Credito.Estado_Crédito == 'Pendiente').all()    # 🟢 VENTAS POR MES DINÁMICO (ahora sí JSON-serializable)
+    clientes_pendientes = Cliente.query.join(Credito).filter(Credito.Estado_Crédito == 'Pendiente').all()
+
+    # 🔢 Gráficas: ventas por mes
     ventas_query = db.session.query(
         extract('month', Compra.Fecha_compra).label('mes'),
         db.func.sum(Compra.Monto).label('total')
@@ -620,34 +678,51 @@ def panel_asesor():
 
     ventas_por_mes = [{'mes': mes, 'total': float(total)} for mes, total in ventas_query]
 
-    # 🟢 CRÉDITOS POR MES DINÁMICO
+    # 🔢 Gráficas: créditos por mes
     creditos_query = db.session.query(
         extract('month', Credito.Fecha_otorgamiento).label('mes'),
         db.func.sum(Credito.Monto_crédito).label('total')
     ).filter(Credito.Estado_Crédito == 'Aprobado')\
      .group_by('mes').order_by('mes').all()
-     
-    creditos_por_mes = [{'mes': mes, 'total': float(total)} for mes, total in creditos_query]
-    return render_template('panel_asesor.html', total_clientes=total_clientes, total_creditos=total_creditos, total_inventario=total_inventario, ventas_del_mes=ventas_del_mes, total_solicitudes_pendientes=total_solicitudes_pendientes,pagos_vencidos=pagos_vencidos, inventarios=inventarios,clientes_pendientes=clientes_pendientes,ventas_por_mes=ventas_por_mes,creditos_por_mes=creditos_por_mes)
 
+    creditos_por_mes = [{'mes': mes, 'total': float(total)} for mes, total in creditos_query]
+
+    return render_template('panel_asesor.html',
+        total_clientes=total_clientes,
+        total_creditos=total_creditos,
+        total_inventario=total_inventario,
+        ventas_del_mes=ventas_del_mes,
+        total_solicitudes_pendientes=total_solicitudes_pendientes,
+        pagos_vencidos=pagos_vencidos,
+        pagos_realizados=pagos_realizados,
+        compras_recientes=compras_recientes,
+        inventarios=inventarios,
+        clientes_pendientes=clientes_pendientes,
+        ventas_por_mes=ventas_por_mes,
+        creditos_por_mes=creditos_por_mes
+    )
 @main_bp.route('/panel_asistente')
 def panel_asistente():
     session['panel_origen'] = request.path 
-    total_clientes = Cliente.query.filter(Cliente.Estado_cliente == 'Activo').count()
-    total_creditos = Credito.query.filter(Credito.Estado_Crédito == 'Aprobado').with_entities(db.func.sum(Credito.Monto_crédito)).scalar() or 0
-    total_inventario = Inventario.query.filter(Inventario.Estado == 'Disponible').count()
-    total_solicitudes_pendientes = Credito.query.filter(Credito.Estado_Crédito == 'Pendiente').count()  # Contar créditos pendientes
-    # Calcular las ventas del mes
-    # Calcular las ventas del mes
     fecha_actual = datetime.now()
     primer_dia_mes = datetime(fecha_actual.year, fecha_actual.month, 1)
+
+    total_clientes = Cliente.query.filter(Cliente.Estado_cliente == 'Activo').count()
+    total_creditos = Credito.query.filter(Credito.Estado_Crédito == 'Aprobado')\
+                         .with_entities(db.func.sum(Credito.Monto_crédito)).scalar() or 0
+    total_inventario = Inventario.query.filter(Inventario.Estado == 'Disponible').count()
+    total_solicitudes_pendientes = Credito.query.filter(Credito.Estado_Crédito == 'Pendiente').count()
+
     ventas_del_mes = Compra.query.with_entities(db.func.sum(db.func.coalesce(Compra.Monto, 0)))\
-                             .filter(Compra.Fecha_compra >= primer_dia_mes, Compra.Fecha_compra < fecha_actual)\
-                             .scalar() or 0
+                         .filter(Compra.Fecha_compra >= primer_dia_mes, Compra.Fecha_compra < fecha_actual)\
+                         .scalar() or 0
 
     pagos_vencidos = Pago.query.filter(Pago.Fecha_pago < fecha_actual, Pago.Estado == 'debe').all()
+    pagos_realizados = Pago.query.filter(Pago.Fecha_pago >= primer_dia_mes).all()
+
     inventarios = Inventario.query.all()
-    clientes_pendientes = Cliente.query.join(Credito).filter(Credito.Estado_Crédito == 'Pendiente').all()    # 🟢 VENTAS POR MES DINÁMICO (ahora sí JSON-serializable)
+    clientes_pendientes = Cliente.query.join(Credito).filter(Credito.Estado_Crédito == 'Pendiente').all()
+
     ventas_query = db.session.query(
         extract('month', Compra.Fecha_compra).label('mes'),
         db.func.sum(Compra.Monto).label('total')
@@ -655,7 +730,6 @@ def panel_asistente():
 
     ventas_por_mes = [{'mes': mes, 'total': float(total)} for mes, total in ventas_query]
 
-    # 🟢 CRÉDITOS POR MES DINÁMICO
     creditos_query = db.session.query(
         extract('month', Credito.Fecha_otorgamiento).label('mes'),
         db.func.sum(Credito.Monto_crédito).label('total')
@@ -663,7 +737,35 @@ def panel_asistente():
      .group_by('mes').order_by('mes').all()
 
     creditos_por_mes = [{'mes': mes, 'total': float(total)} for mes, total in creditos_query]
-    return render_template('panel_asistente.html', total_clientes=total_clientes, total_creditos=total_creditos, total_inventario=total_inventario, ventas_del_mes=ventas_del_mes, total_solicitudes_pendientes=total_solicitudes_pendientes,pagos_vencidos=pagos_vencidos, inventarios=inventarios,clientes_pendientes=clientes_pendientes,ventas_por_mes=ventas_por_mes,creditos_por_mes=creditos_por_mes)
+
+    creditos = Credito.query.all()
+    creditos_pagados = []
+    creditos_con_pagos = []
+
+    for credito in creditos:
+        suma_pagos = db.session.query(db.func.sum(Pago.Monto_pago))\
+            .filter(Pago.ID_Crédito == credito.ID_Crédito).scalar() or Decimal('0')
+
+        if suma_pagos >= credito.Monto_crédito:
+            creditos_pagados.append((credito.cliente.Nombre, credito.ID_Crédito))
+        elif suma_pagos > 0:
+            creditos_con_pagos.append((credito.cliente.Nombre, credito.ID_Crédito, float(suma_pagos), float(credito.Monto_crédito)))
+
+    return render_template('panel_asistente.html',
+        total_clientes=total_clientes,
+        total_creditos=total_creditos,
+        total_inventario=total_inventario,
+        ventas_del_mes=ventas_del_mes,
+        total_solicitudes_pendientes=total_solicitudes_pendientes,
+        pagos_vencidos=pagos_vencidos,
+        pagos_realizados=pagos_realizados,  # 🟡 Agregado
+        inventarios=inventarios,
+        clientes_pendientes=clientes_pendientes,
+        ventas_por_mes=ventas_por_mes,
+        creditos_por_mes=creditos_por_mes,
+        creditos_pagados=creditos_pagados,
+        creditos_con_pagos=creditos_con_pagos
+    )
 
 @main_bp.route('/compras', methods=['GET', 'POST'])
 def ver_compras():

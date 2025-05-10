@@ -37,14 +37,28 @@
     <div class="alerts-section">
       <h2>Alertas y Notificaciones</h2>
       <ul>
-        {% for pago in pagos_vencidos %}
-          <li class="alert alert-danger">Pago vencido - Cliente #{{ pago.credito.ID_Cliente }}</li>
-        {% endfor %}
+
         <li class="alert alert-info">Solicitudes de crédito pendientes: {{ total_solicitudes_pendientes }}</li>
-        {% for inventario in inventarios %}
-          {% if inventario.Estado == 'No Disponible' %}
-            <li class="alert alert-danger">Auto {{ inventario.ID_Vehículo }} fuera de inventario</li>
-          {% endif %}
+  
+            <!-- 🟥 Pagos vencidos -->
+          {% for pago in pagos_vencidos %}
+          <li class="alert alert-dangerr">
+            Pago vencido - {{ pago.credito.cliente.Nombre }} (Crédito #{{ pago.ID_Crédito }}) - Fecha: {{ pago.Fecha_pago }}
+          </li>
+        {% endfor %}
+
+        <!-- 🟨 Pagos realizados -->
+        {% for pago in pagos_realizados %}
+          <li class="alert alert-warningg">
+            {{ pago.credito.cliente.Nombre }} realizó un pago de ${{ "{:,.2f}".format(pago.Monto_pago) }} el {{ pago.Fecha_pago.strftime('%d/%m/%Y') }}
+          </li>
+        {% endfor %}
+
+        <!-- 🟩 Compras realizadas -->
+        {% for compra in compras_recientes %}
+          <li class="alert alert-success">
+            {{ compra.cliente.Nombre }} compró un {{ compra.vehiculo.Marca }} {{ compra.vehiculo.Modelo }} ({{ compra.vehiculo.Año }}) por ${{ "{:,.2f}".format(compra.Monto) }} el {{ compra.Fecha_compra.strftime('%d/%m/%Y') }}
+          </li>
         {% endfor %}
         {% for cliente in clientes_pendientes %}
           <li class="alert alert-warning">{{ cliente.Nombre }} con solicitud pendiente</li>
