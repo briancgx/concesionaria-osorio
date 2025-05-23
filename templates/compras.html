@@ -31,44 +31,52 @@
       </div>
     </div>
     
-
-    <!-- Formulario para agregar compra -->
-    <div class="formulario-agregar">
-      <h2>Agregar Compra</h2>
-      <form method="POST" action="{{ url_for('main.ver_compras') }}">
-        <div class="form-group">
-          <label for="cliente">Cliente</label>
-          <select name="cliente_id" id="cliente" required>
-            <option value="" disabled selected>Selecciona un cliente</option>
-            {% for cliente in clientes %}
-              <option value="{{ cliente.ID_Cliente }}">{{ cliente.Nombre }}</option>
-            {% endfor %}
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label for="vehiculo">Vehículo</label>
-          <select name="vehiculo_id" id="vehiculo" required>
-            <option value="" disabled selected>Selecciona un vehículo</option>
-            {% for vehiculo in vehiculos %}
-              <option value="{{ vehiculo.ID_Vehículo }}">{{ vehiculo.Marca }} {{ vehiculo.Modelo }} {{ vehiculo.Año }}</option>
-            {% endfor %}
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label for="fecha">Fecha de Compra</label>
-          <input type="date" name="fecha_compra" id="fecha" required>
-        </div>
-
-        <div class="form-group">
-          <label for="monto">Monto</label>
-          <input type="number" name="monto" id="monto" step="0.01" required>
-        </div>
-
-        <button class="btn-submit" type="submit">Agregar</button>
-      </form>
+    <!-- Botón para abrir el formulario -->
+    <div class="agregar-compra-button">
+      <button class="btn-agregar" onclick="mostrarFormulario()">Agregar Compra</button>
     </div>
+
+    <!-- Panel flotante (formulario oculto) -->
+    <div class="modal" id="modalCompra">
+      <div class="modal-content">
+        <span class="cerrar" onclick="cerrarFormulario()">&times;</span>
+        <h2>Agregar Compra</h2>
+        <form method="POST" action="{{ url_for('main.ver_compras') }}">
+          <div class="form-group">
+            <label for="cliente">Cliente</label>
+            <select name="cliente_id" id="cliente" required>
+              <option value="" disabled selected>Selecciona un cliente</option>
+              {% for cliente in clientes %}
+                <option value="{{ cliente.ID_Cliente }}">{{ cliente.Nombre }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="vehiculo">Vehículo</label>
+            <select name="vehiculo_id" id="vehiculo" required>
+              <option value="" disabled selected>Selecciona un vehículo</option>
+              {% for vehiculo in vehiculos %}
+                <option value="{{ vehiculo.ID_Vehículo }}">{{ vehiculo.Marca }} {{ vehiculo.Modelo }} {{ vehiculo.Año }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="fecha">Fecha de Compra</label>
+            <input type="date" name="fecha_compra" id="fecha" required>
+          </div>
+
+          <div class="form-group">
+            <label for="monto">Monto</label>
+            <input type="number" name="monto" id="monto" step="0.01" required>
+          </div>
+
+          <button class="btn-submit" type="submit">Agregar</button>
+        </form>
+      </div>
+    </div>
+
 
     <!-- Botón de volver -->
     <div class="controls">
@@ -109,60 +117,89 @@
 
   <!-- Chart.js -->
   <script>
-    const comprasPorVehiculo = {{ compras_por_vehiculo | tojson }};
-    const comprasPorMes = {{ compras_por_mes | tojson }};
-    
-    new Chart(document.getElementById("comprasPorVehiculoChart"), {
-      type: 'bar',
-      data: {
-        labels: Object.keys(comprasPorVehiculo),
-        datasets: [{
-          data: Object.values(comprasPorVehiculo),
-          backgroundColor: '#1abc9c'
-        }]
-      },
-      options: {
-        responsive: true,
-        plugins: { legend: { display: false } },
-        scales: {
-          y: { beginAtZero: true },
-          x: { ticks: { color: '#fff' } }
-        }
-      }
-    });
+  // Datos para las gráficas
+  const comprasPorVehiculo = {{ compras_por_vehiculo | tojson }};
+  const comprasPorMes = {{ compras_por_mes | tojson }};
 
-    new Chart(document.getElementById("comprasPorMesChart"), {
-  type: 'line',
-  data: {
-    labels: Object.keys(comprasPorMes),
-    datasets: [{
-      label: 'Compras',
-      data: Object.values(comprasPorMes),
-      borderColor: '#00bfff',
-      backgroundColor: 'rgba(0, 191, 255, 0.2)',
-      tension: 0.3,
-      fill: true
-    }]
-  },
-  options: {
-    responsive: true,
-    plugins: {
-      legend: { display: false }
+  // Gráfica de Compras por Vehículo
+  new Chart(document.getElementById("comprasPorVehiculoChart"), {
+    type: 'bar',
+    data: {
+      labels: Object.keys(comprasPorVehiculo),
+      datasets: [{
+        data: Object.values(comprasPorVehiculo),
+        backgroundColor: '#1abc9c'
+      }]
     },
-    scales: {
-      y: {
-        beginAtZero: true,
-        ticks: { color: '#ccc' },
-        grid: { color: '#333' }
-      },
-      x: {
-        ticks: { color: '#ccc' },
-        grid: { display: false }
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        y: { beginAtZero: true },
+        x: { ticks: { color: '#fff' } }
       }
     }
-  }
-});
+  });
 
-  </script>
+  // Gráfica de Compras por Mes
+  new Chart(document.getElementById("comprasPorMesChart"), {
+    type: 'line',
+    data: {
+      labels: Object.keys(comprasPorMes),
+      datasets: [{
+        label: 'Compras',
+        data: Object.values(comprasPorMes),
+        borderColor: '#00bfff',
+        backgroundColor: 'rgba(0, 191, 255, 0.2)',
+        tension: 0.3,
+        fill: true
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: { color: '#ccc' },
+          grid: { color: '#333' }
+        },
+        x: {
+          ticks: { color: '#ccc' },
+          grid: { display: false }
+        }
+      }
+    }
+  });
+
+  // Lógica para el modal del formulario
+  function mostrarFormulario() {
+    const modal = document.getElementById("modalCompra");
+    modal.style.display = "flex";
+
+    // Limpiar campos del formulario al abrirlo
+    modal.querySelector("form").reset();
+  }
+
+  function cerrarFormulario() {
+    document.getElementById("modalCompra").style.display = "none";
+  }
+
+  // Cierra el modal al hacer clic fuera de él
+  window.onclick = function(event) {
+    const modal = document.getElementById("modalCompra");
+    if (event.target === modal) {
+      modal.style.display = "none";
+    }
+  };
+
+  // Cierra el modal al presionar la tecla Escape
+  document.addEventListener("keydown", function(event) {
+    if (event.key === "Escape") {
+      cerrarFormulario();
+    }
+  });
+</script>
+
 </body>
 </html>

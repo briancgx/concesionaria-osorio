@@ -14,35 +14,44 @@
       <img src="{{ url_for('static', filename='images/logofp.png') }}" alt="Logo" class="logo">
     </div>
 
-    <!-- Formulario de nuevo pago -->
-    <div class="formulario-agregar">
-        <h2>Agregar Pago</h2>
-        <form method="POST" action="{{ url_for('main.ver_pagos') }}">
-          <div class="form-group">
-            <label for="credito">Crédito</label>
-            <select name="credito_id" id="credito" required onchange="filtrarPagos()">
-              <option value="" disabled selected>Selecciona un crédito</option>
-              {% for credito in creditos %}
-                <option value="{{ credito.ID_Crédito }}">
-                  Cliente {{ credito.cliente.Nombre }} – ${{ credito.Monto_crédito }}
-                </option>
-              {% endfor %}
-            </select>
-          </div>
-      
-          <div class="form-group">
-            <label for="fecha">Fecha de Pago</label>
-            <input type="date" name="fecha_pago" id="fecha" required>
-          </div>
-      
-          <div class="form-group">
-            <label for="monto">Monto</label>
-            <input type="number" name="monto_pago" id="monto" step="0.01" required>
-          </div>
-      
-          <button class="btn-submit" type="submit">Agregar Pago</button>
-        </form>
+<!-- Botón para abrir el formulario de pago -->
+<div class="agregar-compra-button">
+  <button class="btn-agregar" onclick="mostrarFormularioPago()">Agregar Pago</button>
+</div>
+
+<!-- Panel flotante del formulario -->
+<div class="modal" id="modalPago">
+  <div class="modal-content">
+    <span class="cerrar" onclick="cerrarFormularioPago()">&times;</span>
+    <h2>Agregar Pago</h2>
+    <form method="POST" action="{{ url_for('main.ver_pagos') }}">
+      <div class="form-group">
+        <label for="credito">Crédito</label>
+        <select name="credito_id" id="credito" required onchange="filtrarPagos()">
+          <option value="" disabled selected>Selecciona un crédito</option>
+          {% for credito in creditos %}
+            <option value="{{ credito.ID_Crédito }}">
+              Cliente {{ credito.cliente.Nombre }} – ${{ credito.Monto_crédito }}
+            </option>
+          {% endfor %}
+        </select>
       </div>
+
+      <div class="form-group">
+        <label for="fecha">Fecha de Pago</label>
+        <input type="date" name="fecha_pago" id="fecha" required>
+      </div>
+
+      <div class="form-group">
+        <label for="monto">Monto</label>
+        <input type="number" name="monto_pago" id="monto" step="0.01" required>
+      </div>
+
+      <button class="btn-submit" type="submit">Agregar Pago</button>
+    </form>
+  </div>
+</div>
+
 
 <!-- Botones -->
 <div class="controls">
@@ -94,6 +103,28 @@
         }
       });
     }
+    function mostrarFormularioPago() {
+    const modal = document.getElementById("modalPago");
+    modal.style.display = "flex";
+    modal.querySelector("form").reset();
+  }
+
+  function cerrarFormularioPago() {
+    document.getElementById("modalPago").style.display = "none";
+  }
+
+  window.onclick = function(event) {
+    const modal = document.getElementById("modalPago");
+    if (event.target === modal) {
+      modal.style.display = "none";
+    }
+  };
+
+  document.addEventListener("keydown", function(event) {
+    if (event.key === "Escape") {
+      cerrarFormularioPago();
+    }
+  });
   </script>
   </div>
 </body>
