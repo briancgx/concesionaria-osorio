@@ -4,3 +4,4 @@ PyMySQL==1.1.1
 SQLAlchemy>=2.0.16
 blinker==1.9.0
 click==8.1.7
+reportlab==4.4.1
