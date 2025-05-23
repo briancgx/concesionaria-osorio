@@ -31,11 +31,6 @@
       </div>
     </div>
     
-    <!-- Botón para abrir el formulario -->
-    <div class="agregar-compra-button">
-      <button class="btn-agregar" onclick="mostrarFormulario()">Agregar Compra</button>
-    </div>
-
     <!-- Panel flotante (formulario oculto) -->
     <div class="modal" id="modalCompra">
       <div class="modal-content">
@@ -81,6 +76,7 @@
     <!-- Botón de volver -->
     <div class="controls">
       <button class="btn-volver" onclick="window.location.href='{{ session.get('panel_origen') }}'">Volver al Panel</button>
+      <button class="btn-volver" onclick="mostrarFormulario()">Agregar Compra</button>
     </div>
 
     <!-- Tabla de compras -->

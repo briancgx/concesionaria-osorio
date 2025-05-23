@@ -14,10 +14,6 @@
       <img src="{{ url_for('static', filename='images/logofp.png') }}" alt="Logo" class="logo">
     </div>
 
-<!-- Botón para abrir el formulario de pago -->
-<div class="agregar-compra-button">
-  <button class="btn-agregar" onclick="mostrarFormularioPago()">Agregar Pago</button>
-</div>
 
 <!-- Panel flotante del formulario -->
 <div class="modal" id="modalPago">
@@ -56,53 +52,82 @@
 <!-- Botones -->
 <div class="controls">
   <button class="btn-volver" onclick="window.location.href='{{ session.get('panel_origen') }}'">Volver al Panel</button>
+  <button class="btn-volver" onclick="mostrarFormularioPago()">Agregar Pago</button>
+
+  <!-- Selector para filtrar pagos por crédito -->
+<select id="filtro-creditos" onchange="filtrarPagos()" class="filtro-select">
+    <option value="">Todos los Créditos</option>
+    {% for credito in creditos %}
+      <option value="{{ credito.ID_Crédito }}">
+        Cliente {{ credito.cliente.Nombre }} – ${{ credito.Monto_crédito }}
+      </option>
+    {% endfor %}
+  </select>
 </div>
 
+
 <!-- Tabla de pagos -->
-<div class="table-container">
-  <table>
-    <thead>
-      <tr>
-        <th>Cliente</th>
-        <th>Monto del Crédito</th>
-        <th>Fecha del Pago</th>
-        <th>Monto Pagado</th>
-        <th>Estado</th>
-        <th>Acciones</th>
-      </tr>
-    </thead>
-    <tbody id="tabla-pagos">
-      {% for pago in pagos %}
-      <tr data-credito-id="{{ pago.ID_Crédito }}">
-        <td>{{ pago.credito.cliente.Nombre }}</td>
-        <td>${{ "%.2f"|format(pago.credito.Monto_crédito) }}</td>
-        <td>{{ pago.Fecha_pago.strftime('%d/%m/%Y') }}</td>
-        <td>${{ "%.2f"|format(pago.Monto_pago) }}</td>
-        <td>{{ pago.Estado }}</td>
-        <td>
-          <form action="{{ url_for('main.eliminar_pago', id=pago.ID_Pago) }}" method="POST" style="display:inline;">
-            <button type="submit" class="btn-eliminar">Eliminar</button>
-          </form>
-        </td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+<!-- Tabla de pagos con estilo, ancho contenido y scroll elegante -->
+<div class="pagos-table-container">
+  <div class="pagos-table">
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Cliente</th>
+            <th>Monto del Crédito</th>
+            <th>Fecha del Pago</th>
+            <th>Monto Pagado</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="tabla-pagos">
+          {% for pago in pagos %}
+          <tr data-credito-id="{{ pago.ID_Crédito }}">
+            <td>{{ pago.credito.cliente.Nombre }}</td>
+            <td>${{ "%.2f"|format(pago.credito.Monto_crédito) }}</td>
+            <td>{{ pago.Fecha_pago.strftime('%d/%m/%Y') }}</td>
+            <td>${{ "%.2f"|format(pago.Monto_pago) }}</td>
+            <td>{{ pago.Estado }}</td>
+            <td>
+              <form action="{{ url_for('main.eliminar_pago', id=pago.ID_Pago) }}" method="POST" style="display:inline;">
+                <button type="submit" class="btn-eliminar">Eliminar</button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>
+
+
 <script>
-    function filtrarPagos() {
-      const select = document.getElementById("credito");
-      const creditoId = select.value;
-      const filas = document.querySelectorAll("#tabla-pagos tr");
-  
-      filas.forEach(fila => {
-        if (fila.dataset.creditoId === creditoId || creditoId === "") {
-          fila.style.display = "";
-        } else {
-          fila.style.display = "none";
-        }
-      });
+function filtrarPagos() {
+  const selectModal = document.getElementById("credito");
+  const selectExterno = document.getElementById("filtro-creditos");
+
+  // Prioridad: si existe el filtro externo y tiene un valor, úsalo
+  let creditoId = "";
+
+  if (selectExterno && selectExterno.value) {
+    creditoId = selectExterno.value;
+  } else if (selectModal && selectModal.value) {
+    creditoId = selectModal.value;
+  }
+
+  const filas = document.querySelectorAll("#tabla-pagos tr");
+
+  filas.forEach(fila => {
+    if (fila.dataset.creditoId === creditoId || creditoId === "") {
+      fila.style.display = "";
+    } else {
+      fila.style.display = "none";
     }
+  });
+}
     function mostrarFormularioPago() {
     const modal = document.getElementById("modalPago");
     modal.style.display = "flex";
