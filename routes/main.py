@@ -6,6 +6,13 @@ from collections import defaultdict
 from decimal import Decimal
 from datetime import datetime
 from sqlalchemy import func
+from flask import send_file               # ← Para devolver el PDF como respuesta
+from io import BytesIO                    # ← Para generar el PDF en memoria
+from reportlab.lib.pagesizes import letter
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
+from reportlab.lib import colors
+from reportlab.lib.styles import getSampleStyleSheet
+
 
 main_bp = Blueprint('main', __name__)
 
@@ -867,3 +874,64 @@ def eliminar_pago(id):
     db.session.delete(pago)
     db.session.commit()
     return redirect(url_for('main.ver_pagos'))
+
+
+@main_bp.route('/formulario_reporte')
+def formulario_reporte():
+    return render_template('formulario_reporte.html')
+
+
+@main_bp.route('/reporte_ventas_pdf', methods=['GET', 'POST'])
+def reporte_ventas_pdf():
+    if request.method == 'POST':
+        fecha_inicio = request.form['fecha_inicio']
+        fecha_fin = request.form['fecha_fin']
+
+        ventas = db.session.query(Compra, Cliente, Vehiculo)\
+            .join(Cliente, Compra.ID_Cliente == Cliente.ID_Cliente)\
+            .join(Vehiculo, Compra.ID_Vehículo == Vehiculo.ID_Vehículo)\
+            .filter(Compra.Fecha_compra.between(fecha_inicio, fecha_fin))\
+            .all()
+
+        buffer = BytesIO()
+        doc = SimpleDocTemplate(buffer, pagesize=letter)
+        elements = []
+
+        styles = getSampleStyleSheet()
+        elements.append(Paragraph("Reporte de Ventas", styles['Title']))
+        elements.append(Spacer(1, 12))
+
+        data = [['Cliente', 'Vehículo', 'Fecha de Compra', 'Monto']]
+        total = 0
+
+        for compra, cliente, vehiculo in ventas:
+            fila = [
+                cliente.Nombre,
+                f"{vehiculo.Marca} {vehiculo.Modelo}",
+                compra.Fecha_compra.strftime('%Y-%m-%d'),
+                f"${compra.Monto:,.2f}"
+            ]
+            total += compra.Monto
+            data.append(fila)
+
+        data.append(['', '', 'Total:', f"${total:,.2f}"])
+
+        table = Table(data, hAlign='LEFT')
+        table.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), colors.lightblue),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+            ('GRID', (0, 0), (-1, -1), 0.5, colors.grey),
+            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+            ('ALIGN', (-2, 1), (-1, -2), 'RIGHT'),
+            ('ALIGN', (-1, -1), (-1, -1), 'RIGHT'),
+            ('SPAN', (0, -1), (-3, -1)),
+            ('BACKGROUND', (0, -1), (-1, -1), colors.lightgrey),
+        ]))
+
+        elements.append(table)
+        doc.build(elements)
+
+        buffer.seek(0)
+        return send_file(buffer, as_attachment=True, download_name='reporte_ventas.pdf', mimetype='application/pdf')
+    else:
+        return redirect(url_for('main.formulario_reporte'))

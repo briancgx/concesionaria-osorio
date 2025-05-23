@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Reporte de Ventas</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/reporte.css') }}">
+</head>
+<body>
+  <div class="clientes-container">
+    <div class="header-wrapper">
+      <div class="header-bar">
+        <h1>Reporte de Ventas</h1>
+        <div class="logo-container">
+          <img src="{{ url_for('static', filename='images/logofp.png') }}" alt="Logo" class="logo">
+        </div>
+      </div>
+    </div>
+
+    <div class="main-content">
+      <div class="clientes-table">
+        <div class="form-wrapper">
+          <form method="post" action="{{ url_for('main.reporte_ventas_pdf') }}">
+            <h2>Filtrar por Fecha</h2>
+
+            <label for="fecha_inicio">Fecha de inicio:</label>
+            <input type="date" name="fecha_inicio" required>
+
+            <label for="fecha_fin">Fecha de fin:</label>
+            <input type="date" name="fecha_fin" required>
+
+            <button type="submit" class="btn-nuevo">Generar Reporte</button>
+          </form>
+          <button class="btn-volver" onclick="window.location.href='{{ session.get('panel_origen') }}'">Volver al Panel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
